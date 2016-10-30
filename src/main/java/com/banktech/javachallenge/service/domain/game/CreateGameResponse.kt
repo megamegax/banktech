@@ -1,4 +1,4 @@
-package com.banktech.javachallenge.service.domain
+package com.banktech.javachallenge.service.domain.game
 
 /**
  * Model for CreateGameResponse
