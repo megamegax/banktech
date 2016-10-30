@@ -1,3 +1,5 @@
+package com.banktech.javachallenge;
+
 /**
  *
  */
