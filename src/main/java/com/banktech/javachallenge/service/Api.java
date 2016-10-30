@@ -20,6 +20,10 @@ public class Api {
     private static Retrofit retrofit;
     private static String token = "9DD0961787BF82E4B2FD97B206D8D5D8";
 
+    private static GameService gameService;
+    private static SubmarineService submarineService;
+
+
     public Api() {
         setUpRetrofit();
     }
@@ -36,6 +40,9 @@ public class Api {
                 .client(clientFactory())
                 .addConverterFactory(gsonFactory())
                 .build();
+
+        gameService = retrofit.create(GameService.class);
+        submarineService = retrofit.create(SubmarineService.class);
     }
 
 
@@ -72,5 +79,13 @@ public class Api {
 
     public static Retrofit retrofit() {
         return retrofit;
+    }
+
+    public static GameService gameService() {
+        return gameService;
+    }
+
+    public static SubmarineService submarineService() {
+        return submarineService;
     }
 }
