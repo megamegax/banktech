@@ -24,14 +24,21 @@ public class Api {
     private static SubmarineService submarineService;
 
 
-    public Api() {
+    private Api() {
         setUpRetrofit();
     }
 
-    public Api(String baseUrl, Integer port) {
+    private Api(String baseUrl, Integer port) {
         Api.baseUrl = baseUrl;
         Api.port = port;
         setUpRetrofit();
+    }
+
+    public static void initialize(String baseUrl, Integer port){
+        new Api(baseUrl,port);
+    }
+    public static void initialize(){
+        new Api();
     }
 
     private void setUpRetrofit() {

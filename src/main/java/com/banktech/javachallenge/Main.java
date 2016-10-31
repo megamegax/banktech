@@ -16,12 +16,12 @@ public class Main {
     }
 
     private static void setUpApi() {
-        new Api();
+        Api.initialize();
     }
 
     private static void setUpApi(String baseUrl, String port) {
         Integer portNumber = convertToInt(port);
-        new Api(baseUrl, portNumber);
+        Api.initialize(baseUrl, portNumber);
     }
 
     private static Integer convertToInt(String port) {
