@@ -45,6 +45,6 @@ data class Scores(val scores: Map<String, Int>)
 data class ConnectionStatus(val connected: Map<String, Boolean>)
 
 
-enum class Status() {
+enum class Status{
     WAITING, RUNNING, ENDED
 }
