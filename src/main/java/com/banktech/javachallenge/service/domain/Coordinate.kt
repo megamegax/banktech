@@ -1,4 +1,4 @@
-package com.banktech.javachallenge.service.domain.game
+package com.banktech.javachallenge.service.domain
 
 /**
  *

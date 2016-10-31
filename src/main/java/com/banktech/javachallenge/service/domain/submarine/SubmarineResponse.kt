@@ -1,6 +1,6 @@
 package com.banktech.javachallenge.service.domain.submarine
 
-import com.banktech.javachallenge.service.domain.game.Coordinate
+import com.banktech.javachallenge.service.domain.Coordinate
 
 /**
  *
@@ -15,6 +15,3 @@ data class SubmarineResponse(val type: String,
                              val sonarCooldown: Int,
                              val torpedoCooldown: Int,
                              val sonarExtended: Int)
-
-
-data class Owner(val name: String)

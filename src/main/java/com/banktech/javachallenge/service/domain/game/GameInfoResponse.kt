@@ -1,5 +1,7 @@
 package com.banktech.javachallenge.service.domain.game
 
+import com.banktech.javachallenge.service.domain.Coordinate
+
 /**
  *
  */
