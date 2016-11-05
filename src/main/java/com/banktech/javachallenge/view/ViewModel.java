@@ -17,6 +17,9 @@ public class ViewModel {
     private World worldMap;
 
     public ViewModel() {
+        calls = new ArrayList<>();
+        ownSubmarines = new ArrayList<>();
+        detectedSubmarines = new ArrayList<>();
     }
 
     public ViewModel(Game game, List<ApiCall> calls, List<OwnSubmarine> ownSubmarines, List<Submarine> detectedSubmarines, World worldMap) {

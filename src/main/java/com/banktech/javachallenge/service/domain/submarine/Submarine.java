@@ -1,7 +1,7 @@
 package com.banktech.javachallenge.service.domain.submarine;
 
-import com.banktech.javachallenge.service.domain.Position;
 
+import com.banktech.javachallenge.service.domain.Position;
 
 public class Submarine {
     protected String type;
