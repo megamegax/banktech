@@ -44,7 +44,7 @@ public class Api {
                 .client(clientFactory())
                 .addConverterFactory(gsonFactory())
                 .build();
-
+        System.out.println("retrofit initialized with baseUrl: "+retrofit.baseUrl());
         gameService = retrofit.create(GameService.class);
         submarineService = retrofit.create(SubmarineService.class);
     }
@@ -63,7 +63,7 @@ public class Api {
             Request original = chain.request();
             Request.Builder requestBuilder = original.newBuilder();
             requestBuilder.header("Accept", "application/json");
-            if (Strings.isNullOrEmpty(token1)) {
+            if (!Strings.isNullOrEmpty(token1)) {
                 requestBuilder.addHeader("TEAMTOKEN", token1);
             }
 

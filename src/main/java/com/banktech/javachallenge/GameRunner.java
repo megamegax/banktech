@@ -30,6 +30,7 @@ public class GameRunner {
         String url = Api.gameService().listGames().request().url().url().toString();
 
         Response<GameResponse> response = Api.gameService().listGames().execute();
+        handleConnectionErrors(response);
         if (response.body() != null) {
             GameResponse gameResponse = response.body();
             SimpleResponse simpleResponse = new SimpleResponse(gameResponse.getMessage(), gameResponse.getCode());
@@ -38,6 +39,13 @@ public class GameRunner {
             return gameResponse;
         }
         return null;
+    }
+
+    private void handleConnectionErrors(Response response) throws IOException {
+        if (response.errorBody() != null) {
+            System.out.println(response.message());
+            System.out.println(response.errorBody().string());
+        }
     }
 
     private int getCurrentTurn() {
@@ -49,6 +57,8 @@ public class GameRunner {
         String url = Api.gameService().createGame().request().url().url().toString();
 
         Response<CreateGameResponse> response = Api.gameService().createGame().execute();
+        handleConnectionErrors(response);
+
         if (response.body() != null) {
             CreateGameResponse createGameResponse = response.body();
             SimpleResponse simpleResponse = new SimpleResponse(createGameResponse.getMessage(), createGameResponse.getCode());
@@ -69,13 +79,13 @@ public class GameRunner {
         String url = Api.gameService().joinGame(gameId).request().url().url().toString();
 
         Response<SimpleResponse> response = Api.gameService().joinGame(gameId).execute();
+        handleConnectionErrors(response);
         if (response.body() != null) {
             SimpleResponse simpleResponse = response.body();
             ApiCall apiCall = new ApiCall(method, url, simpleResponse);
             refreshCallHistory(apiCall);
         }
     }
-
 
 
 }

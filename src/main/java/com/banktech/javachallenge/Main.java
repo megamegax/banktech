@@ -27,10 +27,11 @@ public class Main {
             try {
                 GameResponse runningGames = gameRunner.listGames();
                 if (runningGames!=null && runningGames.getGames().isEmpty()) {
-                    CreateGameResponse createGameResponse = gameRunner.startGame();
-                    gameRunner.joinGame(createGameResponse.getId());
+                   // CreateGameResponse createGameResponse = gameRunner.startGame();
+                  //  gameRunner.joinGame(createGameResponse.getId());
+                    System.out.println("No games are running...");
                 }else{
-                    System.out.println(runningGames);
+                    System.out.println("fsd "+runningGames);
                 }
             } catch (IOException e) {
                 e.printStackTrace();
