@@ -26,7 +26,7 @@ public class Main {
         new Thread(() -> {
             try {
                 GameResponse runningGames = gameRunner.listGames();
-                if (runningGames.getGames().isEmpty()) {
+                if (runningGames!=null && runningGames.getGames().isEmpty()) {
                     CreateGameResponse createGameResponse = gameRunner.startGame();
                     gameRunner.joinGame(createGameResponse.getId());
                 }else{

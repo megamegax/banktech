@@ -7,8 +7,6 @@ import com.banktech.javachallenge.service.domain.game.SimpleResponse;
 import com.banktech.javachallenge.view.ApiCall;
 import com.banktech.javachallenge.view.GUIListener;
 import com.banktech.javachallenge.view.ViewModel;
-import retrofit2.Call;
-import retrofit2.Callback;
 import retrofit2.Response;
 
 
@@ -18,8 +16,8 @@ import java.util.List;
 
 
 public class GameRunner {
-    List<ViewModel> turns = new ArrayList<>();
-    GUIListener listener;
+    private List<ViewModel> turns = new ArrayList<>();
+    private GUIListener listener;
 
     GameRunner(GUIListener listener) {
         this.listener = listener;
@@ -77,4 +75,7 @@ public class GameRunner {
             refreshCallHistory(apiCall);
         }
     }
+
+
+
 }
