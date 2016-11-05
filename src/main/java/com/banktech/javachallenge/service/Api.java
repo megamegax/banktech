@@ -43,7 +43,7 @@ public class Api {
 
     private void setUpRetrofit() {
         retrofit = new Retrofit.Builder()
-                .baseUrl(baseUrl + port + "/jc16-srv")
+                .baseUrl("http://" + baseUrl + ":" + port + "/jc16-srv/")
                 .client(clientFactory())
                 .addConverterFactory(gsonFactory())
                 .build();
@@ -67,7 +67,7 @@ public class Api {
                 Request original = chain.request();
                 Request.Builder requestBuilder = original.newBuilder();
                 requestBuilder.header("Accept", "application/json");
-                if (Strings.isNullOrEmpty(token)) {
+                if (!Strings.isNullOrEmpty(token)) {
                     requestBuilder.addHeader("TEAMTOKEN", token);
                 }
 

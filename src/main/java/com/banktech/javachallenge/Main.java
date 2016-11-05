@@ -23,6 +23,7 @@ public class Main {
         try {
             Response<GameResponse> response = Api.gameService().listGames().execute();
             GameResponse runningGames = response.body();
+            System.out.println(runningGames);
         } catch (IOException e) {
             e.printStackTrace();
         }

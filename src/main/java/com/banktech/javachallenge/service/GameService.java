@@ -29,7 +29,7 @@ public interface GameService {
      * Lekéri a játékok listáját amibe a csapat csatlakozhat, és még nem csatlakozott.
      * return GameResponse
      */
-    @GET("/game")
+    @GET("game")
     Call<GameResponse> listGames();
 
     /**
