@@ -53,7 +53,7 @@ public class MapPanel extends JPanel {
         g.fillOval(scale(position.getX() - radius), scale(position.getY() - radius), scale(radius * 2), scale(radius * 2));
     }
 
-    private int scale(int number) {
+    private int scale(double number) {
         return (int) (SCALE * number);
     }
 
