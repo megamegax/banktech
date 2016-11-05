@@ -4,5 +4,10 @@ import com.banktech.javachallenge.service.domain.game.Game
 import com.banktech.javachallenge.service.domain.submarine.Submarine
 import com.banktech.javachallenge.service.domain.submarine.SubmarineResponse
 import com.banktech.javachallenge.world.World
+import java.util.*
 
-data class ViewModel(var game: Game, var calls: List<ApiCall>, var ownSubmarines: List<SubmarineResponse>, var detectedSubmarines: List<Submarine>, var worldMap: World)
+data class ViewModel(var game: Game? = null,
+                     var calls: MutableList<ApiCall> = ArrayList(),
+                     var ownSubmarines: MutableList<SubmarineResponse> = ArrayList(),
+                     var detectedSubmarines: MutableList<Submarine>? = ArrayList(),
+                     var worldMap: World? = null)
