@@ -1,12 +1,10 @@
 package com.banktech.javachallenge;
 
-import com.banktech.javachallenge.service.*;
-import com.banktech.javachallenge.service.domain.game.CreateGameResponse;
-import com.banktech.javachallenge.view.GUIListener;
-import com.banktech.javachallenge.view.ViewModel;
-
 import java.io.IOException;
-import java.util.List;
+
+import com.banktech.javachallenge.service.Api;
+import com.banktech.javachallenge.service.domain.game.CreateGameResponse;
+import com.banktech.javachallenge.view.View;
 
 /**
  *
@@ -15,18 +13,11 @@ public class Main {
 
     public static void main(String[] args) {
         startUp(args);
-        GUIListener guiListener = new GUIListener() {
-            @Override
-            public void refresh(List<ViewModel> turns) {
-                //refresh gui
-            }
-        };
-        GameRunner gameRunner = new GameRunner(guiListener);
+        View view = new View();
+        GameRunner gameRunner = new GameRunner(view);
         new Thread(() -> {
             try {
                 initializeGame(gameRunner);
-
-
             } catch (IOException e) {
                 e.printStackTrace();
             }
