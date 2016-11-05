@@ -89,6 +89,6 @@ public interface GameService {
      * @return GameInfoResponse
      */
     @GET("game/{gameId}")
-    Call<GameInfoResponse> gameInfo(@Path("gameId") Integer gameId);
+    Call<GameInfoResponse> gameInfo(@Path("gameId") Long gameId);
 
 }

@@ -2,8 +2,12 @@ package com.banktech.javachallenge.world;
 
 import com.banktech.javachallenge.service.domain.Position;
 import com.banktech.javachallenge.service.domain.submarine.MoveRequest;
+import com.banktech.javachallenge.service.domain.submarine.OwnSubmarine;
 import com.banktech.javachallenge.service.domain.submarine.ShootRequest;
 import com.banktech.javachallenge.service.domain.submarine.Submarine;
+
+import java.io.IOException;
+import java.util.List;
 
 
 public interface World {
@@ -16,13 +20,16 @@ public interface World {
      */
     Object cellAt(final Position position);
 
+    void replaceCell(final Position position, Object object);
+
+
     /**
      * Moves selected {@link Submarine} on the Map.
      *
      * @param submarine   {@link Submarine}
      * @param moveRequest {@link MoveRequest}
      */
-    void move(final Submarine submarine, final MoveRequest moveRequest);
+    void move(final Submarine submarine, final MoveRequest moveRequest) throws IOException;
 
     /**
      * Shoot with selected {@link Submarine}.
@@ -30,7 +37,7 @@ public interface World {
      * @param submarine    {@link Submarine}
      * @param shootRequest {@link ShootRequest}
      */
-    void shoot(final Submarine submarine, final ShootRequest shootRequest);
+    void shoot(final Submarine submarine, final ShootRequest shootRequest) throws IOException;
 
     /**
      * Gives back the width and height of the world.

@@ -25,25 +25,33 @@ public class Main {
         GameRunner gameRunner = new GameRunner(guiListener);
         new Thread(() -> {
             try {
-                GameResponse runningGames = gameRunner.listGames();
-                System.out.println("running games: "+runningGames);
+                initializeGame(gameRunner);
 
-                if (runningGames != null && runningGames.getGames().isEmpty()) {
-                    System.out.println("No games are running...");
-                    CreateGameResponse createGameResponse = gameRunner.startGame();
-                    System.out.println("Starting new game: " + createGameResponse.getId());
-                    gameRunner.joinGame(createGameResponse.getId());
-                    System.out.println("Joined to game: " + createGameResponse.getId());
-                } else {
-                    System.out.println(runningGames);
-                }
 
-                gameRunner.printLogs();
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }).start();
 
+    }
+
+    private static void initializeGame(GameRunner gameRunner) throws IOException {
+        GameResponse runningGames = gameRunner.listGames();
+        if (runningGames != null && runningGames.getGames().isEmpty()) {
+            System.out.println("No games are running...");
+            CreateGameResponse createGameResponse = gameRunner.startGame();
+            System.out.println("Starting new game: " + createGameResponse.getId());
+            gameRunner.joinGame(createGameResponse.getId());
+            System.out.println("Joined to game: " + createGameResponse.getId());
+            gameRunner.play();
+            System.out.println("Control added to GameRunner.");
+        } else {
+            System.out.println("Game already running: "+runningGames.getGames().get(0));
+            gameRunner.joinGame(runningGames.getGames().get(0));
+            System.out.println("Joined to game: " + runningGames.getGames().get(0));
+            gameRunner.play();
+            System.out.println("Control added to GameRunner.");
+        }
     }
 
     private static void startUp(String[] args) {

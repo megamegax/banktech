@@ -39,7 +39,7 @@ public interface SubmarineService {
      * @return SubmarineResponse {@link SubmarineResponse}
      */
     @GET("game/{gameId}/submarine")
-    Call<List<SubmarineResponse>> listSubmarines(@Path("gameId") Long gameId);
+    Call<SubmarineResponse> listSubmarines(@Path("gameId") Long gameId);
 
     /**
      * A sebesség és az elfordulás változásának mértékét megadva csökkenthetjük-növelhetjük

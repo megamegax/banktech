@@ -29,6 +29,15 @@ public class ServerWorld implements World {
         return map.get(position);
     }
 
+    @Override
+    public void replaceCell(Position position, Object object) {
+        if (map.get(position) != null) {
+            map.replace(position, object);
+        } else {
+            map.put(position, object);
+        }
+    }
+
     /**
      * Moves selected {@link Submarine} on the Map.
      *

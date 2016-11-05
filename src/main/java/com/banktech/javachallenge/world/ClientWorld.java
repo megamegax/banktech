@@ -2,6 +2,7 @@ package com.banktech.javachallenge.world;
 
 import com.banktech.javachallenge.service.Api;
 import com.banktech.javachallenge.service.domain.Position;
+import com.banktech.javachallenge.service.domain.game.Game;
 import com.banktech.javachallenge.service.domain.game.SimpleResponse;
 import com.banktech.javachallenge.service.domain.submarine.MoveRequest;
 import com.banktech.javachallenge.service.domain.submarine.ShootRequest;
@@ -11,6 +12,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,10 +24,10 @@ public class ClientWorld implements World {
     private Map<Position, Object> map;
     private long gameId;
 
-    public ClientWorld(final long gameId, final int width, final int height) {
-        size = new Position(width, height);
+    public ClientWorld(final Game game) {
+        size = new Position(game.getMapConfiguration().getWidth(), game.getMapConfiguration().getHeight());
         map = new HashMap<>();
-        this.gameId = gameId;
+        this.gameId = game.getId();
     }
 
     /**
@@ -39,6 +41,15 @@ public class ClientWorld implements World {
         return map.get(position);
     }
 
+    @Override
+    public void replaceCell(Position position, Object object) {
+        if (map.get(position) != null) {
+            map.replace(position, object);
+        } else {
+            map.put(position, object);
+        }
+    }
+
     /**
      * Moves selected {@link Submarine} on the Map.
      *
@@ -46,43 +57,14 @@ public class ClientWorld implements World {
      * @param moveRequest       {@link MoveRequest}
      */
     @Override
-    public void move(final Submarine selectedSubmarine, final MoveRequest moveRequest) {
+    public void move(final Submarine selectedSubmarine, final MoveRequest moveRequest) throws IOException {
         //noinspection SuspiciousMethodCalls
         map.remove(selectedSubmarine);
         delegateMovementToServer(moveRequest, selectedSubmarine);
     }
 
-    private void delegateMovementToServer(MoveRequest moveRequest, final Submarine selectedSubmarine) {
-        Api.submarineService().move(gameId, selectedSubmarine.getId(), moveRequest).enqueue(new Callback<SimpleResponse>() {
-            @Override
-            public void onResponse(Call<SimpleResponse> call, Response<SimpleResponse> response) {
-                Api.submarineService().listSubmarines(gameId).enqueue(new Callback<List<SubmarineResponse>>() {
-                    @Override
-                    public void onResponse(Call<List<SubmarineResponse>> call, Response<List<SubmarineResponse>> response) {
-                        if (response.body() != null) {
-                            List<SubmarineResponse> submarineResponses = response.body();
-                            Optional<SubmarineResponse> newSubmarine = submarineResponses.stream().filter(submarineResponse -> submarineResponse.getId() == selectedSubmarine.getId()).findFirst();
-                            if (newSubmarine.isPresent()) {
-                                Position newPosition = newSubmarine.get().getPosition();
-                                selectedSubmarine.setPosition(newPosition);
-                                map.put(newPosition, selectedSubmarine);
-                            }
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<List<SubmarineResponse>> call, Throwable throwable) {
-                        throwable.printStackTrace();
-                    }
-                });
-
-            }
-
-            @Override
-            public void onFailure(Call<SimpleResponse> call, Throwable throwable) {
-                throwable.printStackTrace();
-            }
-        });
+    private void delegateMovementToServer(MoveRequest moveRequest, final Submarine selectedSubmarine) throws IOException {
+        Api.submarineService().move(gameId, selectedSubmarine.getId(), moveRequest).execute();
     }
 
     /**
@@ -92,22 +74,12 @@ public class ClientWorld implements World {
      * @param shootRequest      {@link ShootRequest}
      */
     @Override
-    public void shoot(Submarine selectedSubmarine, ShootRequest shootRequest) {
+    public void shoot(Submarine selectedSubmarine, ShootRequest shootRequest) throws IOException {
         delegateShootToServer(shootRequest, selectedSubmarine);
     }
 
-    private void delegateShootToServer(ShootRequest shootRequest, Submarine selectedSubmarine) {
-        Api.submarineService().shoot(gameId, selectedSubmarine.getId(), shootRequest).enqueue(new Callback<SimpleResponse>() {
-            @Override
-            public void onResponse(Call<SimpleResponse> call, Response<SimpleResponse> response) {
-
-            }
-
-            @Override
-            public void onFailure(Call<SimpleResponse> call, Throwable throwable) {
-
-            }
-        });
+    private void delegateShootToServer(ShootRequest shootRequest, Submarine selectedSubmarine) throws IOException {
+        Api.submarineService().shoot(gameId, selectedSubmarine.getId(), shootRequest).execute();
     }
 
     public Position size() {
