@@ -209,10 +209,11 @@ public class GameRunner {
                             List<OwnSubmarine> ownSubmarines = getCurrentViewModel().getOwnSubmarines();
                             if (!ownSubmarines.isEmpty()) {
                                 OwnSubmarine ownSubmarine = ownSubmarines.get(0);
+                                int speedChange = 0;
                                 if (ownSubmarine.getVelocity() < maxSpeed) {
-                                    int toAccelerate = Math.min(maxSpeed - ownSubmarine.getVelocity(), maxAccel);
-                                    getCurrentViewModel().getWorldMap().move(ownSubmarine, new MoveRequest((double)toAccelerate, 0.0));
+                                    speedChange = Math.min(maxSpeed - ownSubmarine.getVelocity(), maxAccel);
                                 }
+                                getCurrentViewModel().getWorldMap().move(ownSubmarine, new MoveRequest((double)speedChange, 15.0));
                             }
                         } catch (Exception e) {
                             e.printStackTrace();
