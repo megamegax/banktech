@@ -23,10 +23,12 @@ public class GameRunner {
     private List<ViewModel> turns = new ArrayList<>();
     private GUIListener listener;
     private long gameId;
+    private int localRound;
 
     GameRunner(GUIListener listener) {
         this.listener = listener;
         turns.add(new ViewModel());
+        localRound = 0;
     }
 
 
@@ -73,6 +75,19 @@ public class GameRunner {
 
     private int getCurrentTurn() {
         return turns.size() - 1;
+    }
+
+
+    private int getCurrentRound() {
+        if (turns.size() == 0) {
+            return 1;
+        } else {
+            if (turns.get(turns.size() - 1).getGame() == null) {
+                return turns.size();
+            } else {
+                return turns.get(turns.size() - 1).getGame().getRound();
+            }
+        }
     }
 
     CreateGameResponse startGame() {
@@ -158,7 +173,7 @@ public class GameRunner {
 
 
     public void printLogs() {
-        System.out.println("------Turn: " + (getCurrentTurn() + 1) + "------");
+        System.out.println("------Turn: " + (getCurrentRound() + 1) + "------");
         List<ApiCall> calls = getCurrentViewModel().getCalls();
         calls.forEach(apiCall -> System.out.println(apiCall.getMethod() + ":" + apiCall.getUrl() + " -> " + apiCall.getResponse()));
     }
@@ -237,6 +252,9 @@ public class GameRunner {
     }
 
     private boolean isNextTurn(Game game) {
-        return getCurrentTurn() < game.getRound();
+        int lastLocalRound = localRound;
+        int remoteRound = game.getRound();
+        localRound = remoteRound;
+        return lastLocalRound < remoteRound;
     }
 }
