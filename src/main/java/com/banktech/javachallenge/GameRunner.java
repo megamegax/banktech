@@ -1,22 +1,28 @@
 package com.banktech.javachallenge;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Consumer;
+
 import com.banktech.javachallenge.service.Api;
-import com.banktech.javachallenge.service.domain.game.*;
+import com.banktech.javachallenge.service.domain.game.CreateGameResponse;
+import com.banktech.javachallenge.service.domain.game.Game;
+import com.banktech.javachallenge.service.domain.game.GameInfoResponse;
+import com.banktech.javachallenge.service.domain.game.GameResponse;
+import com.banktech.javachallenge.service.domain.game.SimpleResponse;
+import com.banktech.javachallenge.service.domain.game.Status;
+import com.banktech.javachallenge.service.domain.submarine.MoveRequest;
 import com.banktech.javachallenge.service.domain.submarine.OwnSubmarine;
 import com.banktech.javachallenge.service.domain.submarine.SubmarineResponse;
 import com.banktech.javachallenge.view.ApiCall;
 import com.banktech.javachallenge.view.GUIListener;
 import com.banktech.javachallenge.view.ViewModel;
 import com.banktech.javachallenge.world.ClientWorld;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.Consumer;
 
 
 public class GameRunner {
@@ -197,6 +203,20 @@ public class GameRunner {
                             loadOwnSubmarines();
                         }
                         alreadyUsedTurn[0] = true;
+                        try {
+                            int maxSpeed = getCurrentViewModel().getGame().getMapConfiguration().getMaxSpeed();
+                            int maxAccel = getCurrentViewModel().getGame().getMapConfiguration().getMaxAccelerationPerRound();
+                            List<OwnSubmarine> ownSubmarines = getCurrentViewModel().getOwnSubmarines();
+                            if (!ownSubmarines.isEmpty()) {
+                                OwnSubmarine ownSubmarine = ownSubmarines.get(0);
+                                if (ownSubmarine.getVelocity() < maxSpeed) {
+                                    int toAccelerate = Math.min(maxSpeed - ownSubmarine.getVelocity(), maxAccel);
+                                    getCurrentViewModel().getWorldMap().move(ownSubmarine, new MoveRequest((double)toAccelerate, 0.0));
+                                }
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                         printLogs();
                     }
                 }
