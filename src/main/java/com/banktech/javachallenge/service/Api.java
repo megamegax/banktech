@@ -3,6 +3,7 @@ package com.banktech.javachallenge.service;
 import com.google.common.base.Strings;
 import com.google.gson.GsonBuilder;
 import okhttp3.OkHttpClient;
+import okhttp3.Protocol;
 import okhttp3.Request;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -31,10 +32,11 @@ public class Api {
         setUpRetrofit();
     }
 
-    public static void initialize(String baseUrl, Integer port){
-        new Api(baseUrl,port);
+    public static void initialize(String baseUrl, Integer port) {
+        new Api(baseUrl, port);
     }
-    public static void initialize(){
+
+    public static void initialize() {
         new Api();
     }
 
@@ -44,7 +46,7 @@ public class Api {
                 .client(clientFactory())
                 .addConverterFactory(gsonFactory())
                 .build();
-        System.out.println("retrofit initialized with baseUrl: "+retrofit.baseUrl());
+        System.out.println("retrofit initialized with baseUrl: " + retrofit.baseUrl());
         gameService = retrofit.create(GameService.class);
         submarineService = retrofit.create(SubmarineService.class);
     }
@@ -71,6 +73,15 @@ public class Api {
             return chain.proceed(request);
 
         });
+        builder.interceptors().add(chain -> {
+            try {
+                return chain.proceed(chain.request());
+            } catch (Exception e) {
+                e.printStackTrace();
+                return new okhttp3.Response.Builder().code(500).message("Timeout").protocol(Protocol.HTTP_1_1).request(chain.request()).build();
+            }
+        });
+
 
         return builder.build();
     }
