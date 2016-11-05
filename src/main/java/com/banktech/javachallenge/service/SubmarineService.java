@@ -38,7 +38,7 @@ public interface SubmarineService {
      *
      * @return SubmarineResponse {@link SubmarineResponse}
      */
-    @GET("/game/{gameId}/submarine")
+    @GET("game/{gameId}/submarine")
     Call<List<SubmarineResponse>> listSubmarines(@Path("gameId") Long gameId);
 
     /**
@@ -68,7 +68,7 @@ public interface SubmarineService {
      *                    </p>
      * @return SimpleResponse {@link SimpleResponse}
      */
-    @POST("/game/{gameId}/submarine/{submarineId}/move")
+    @POST("game/{gameId}/submarine/{submarineId}/move")
     Call<SimpleResponse> move(@Path("gameId") Long gameId, @Path("submarineId") Long submarineId, @Body MoveRequest moveRequest);
 
     /**
@@ -88,7 +88,7 @@ public interface SubmarineService {
      *                     </p>
      * @return SimpleResponse {@link SimpleResponse}
      */
-    @POST("/game/{gameId}/submarine/{submarineId}/shoot")
+    @POST("game/{gameId}/submarine/{submarineId}/shoot")
     Call<SimpleResponse> shoot(@Path("gameId") Long gameId, @Path("submarineId") Long submarineId, @Body ShootRequest shootRequest);
 
     /**
@@ -113,7 +113,7 @@ public interface SubmarineService {
      *                    </p>
      * @return SonarResponse {@link SonarResponse}
      */
-    @GET("/game/{gameId}/submarine/{submarineId}/sonar")
+    @GET("game/{gameId}/submarine/{submarineId}/sonar")
     Call<SonarResponse> sonar(@Path("gameId") Long gameId, @Path("submarineId") Long submarineId);
 
     /**
@@ -136,7 +136,7 @@ public interface SubmarineService {
      *                    </p>     *
      * @return SimpleResponse {@link SimpleResponse}
      */
-    @POST("/game/{gameId}/submarine/{submarineId}/sonar")
+    @POST("game/{gameId}/submarine/{submarineId}/sonar")
     Call<SonarResponse> extendSonar(@Path("gameId") Long gameId, @Path("submarineId") Long submarineId);
 
 

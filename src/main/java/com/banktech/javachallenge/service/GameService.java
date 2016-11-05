@@ -21,7 +21,7 @@ public interface GameService {
      *
      * @return CreateGameResponse
      */
-    @POST("/game")
+    @POST("game")
     Call<CreateGameResponse> createGame();
 
     /**
@@ -44,7 +44,7 @@ public interface GameService {
      *               </p>
      * @return SimpleResponse
      */
-    @POST("/game/{gameId}")
+    @POST("game/{gameId}")
     Call<SimpleResponse> joinGame(@Path("gameId") Integer gameId);
 
     /**
@@ -88,7 +88,7 @@ public interface GameService {
      *               3 - Nem létező gameId</p>
      * @return GameInfoResponse
      */
-    @GET("/game/{gameId}")
+    @GET("game/{gameId}")
     Call<GameInfoResponse> gameInfo(@Path("gameId") Integer gameId);
 
 }
