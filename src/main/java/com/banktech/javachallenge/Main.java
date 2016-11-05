@@ -26,13 +26,19 @@ public class Main {
         new Thread(() -> {
             try {
                 GameResponse runningGames = gameRunner.listGames();
-                if (runningGames!=null && runningGames.getGames().isEmpty()) {
-                   // CreateGameResponse createGameResponse = gameRunner.startGame();
-                  //  gameRunner.joinGame(createGameResponse.getId());
+                System.out.println("running games: "+runningGames);
+
+                if (runningGames != null && runningGames.getGames().isEmpty()) {
                     System.out.println("No games are running...");
-                }else{
-                    System.out.println("fsd "+runningGames);
+                    CreateGameResponse createGameResponse = gameRunner.startGame();
+                    System.out.println("Starting new game: " + createGameResponse.getId());
+                    gameRunner.joinGame(createGameResponse.getId());
+                    System.out.println("Joined to game: " + createGameResponse.getId());
+                } else {
+                    System.out.println(runningGames);
                 }
+
+                gameRunner.printLogs();
             } catch (IOException e) {
                 e.printStackTrace();
             }

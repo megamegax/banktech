@@ -88,4 +88,8 @@ public class GameRunner {
     }
 
 
+    public void printLogs() {
+        List<ApiCall> calls = turns.get(getCurrentTurn()).getCalls();
+        calls.forEach(apiCall -> System.out.println(apiCall.getMethod() + ":" + apiCall.getUrl() + " -> " + apiCall.getResponse()));
+    }
 }
