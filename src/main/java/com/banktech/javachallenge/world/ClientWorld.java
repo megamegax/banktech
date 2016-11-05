@@ -4,6 +4,7 @@ import com.banktech.javachallenge.service.Api;
 import com.banktech.javachallenge.service.domain.Position;
 import com.banktech.javachallenge.service.domain.game.SimpleResponse;
 import com.banktech.javachallenge.service.domain.submarine.MoveRequest;
+import com.banktech.javachallenge.service.domain.submarine.ShootRequest;
 import com.banktech.javachallenge.service.domain.submarine.Submarine;
 import com.banktech.javachallenge.service.domain.submarine.SubmarineResponse;
 import retrofit2.Call;
@@ -33,6 +34,7 @@ public class ClientWorld implements World {
      * @param position {@link Position}
      * @return {@link Submarine} or {@link Island} or {@link Torpedo} or Null if nothing is there.
      */
+    @Override
     public Object cellAt(final Position position) {
         return map.get(position);
     }
@@ -40,11 +42,11 @@ public class ClientWorld implements World {
     /**
      * Moves selected {@link Submarine} on the Map.
      *
-     * @param submarine   {@link Submarine}
-     * @param moveRequest {@link MoveRequest}
+     * @param selectedSubmarine {@link Submarine}
+     * @param moveRequest       {@link MoveRequest}
      */
-    public void move(final Submarine submarine, final MoveRequest moveRequest) {
-        Submarine selectedSubmarine = (Submarine) cellAt(submarine.getPosition());
+    @Override
+    public void move(final Submarine selectedSubmarine, final MoveRequest moveRequest) {
         //noinspection SuspiciousMethodCalls
         map.remove(selectedSubmarine);
         delegateMovementToServer(moveRequest, selectedSubmarine);
@@ -79,6 +81,31 @@ public class ClientWorld implements World {
             @Override
             public void onFailure(Call<SimpleResponse> call, Throwable throwable) {
                 throwable.printStackTrace();
+            }
+        });
+    }
+
+    /**
+     * Shoot with selected {@link Submarine}.
+     *
+     * @param selectedSubmarine {@link Submarine}
+     * @param shootRequest      {@link ShootRequest}
+     */
+    @Override
+    public void shoot(Submarine selectedSubmarine, ShootRequest shootRequest) {
+        delegateShootToServer(shootRequest, selectedSubmarine);
+    }
+
+    private void delegateShootToServer(ShootRequest shootRequest, Submarine selectedSubmarine) {
+        Api.submarineService().shoot(gameId, selectedSubmarine.getId(), shootRequest).enqueue(new Callback<SimpleResponse>() {
+            @Override
+            public void onResponse(Call<SimpleResponse> call, Response<SimpleResponse> response) {
+
+            }
+
+            @Override
+            public void onFailure(Call<SimpleResponse> call, Throwable throwable) {
+
             }
         });
     }

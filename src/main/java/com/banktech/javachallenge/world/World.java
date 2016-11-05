@@ -2,6 +2,7 @@ package com.banktech.javachallenge.world;
 
 import com.banktech.javachallenge.service.domain.Position;
 import com.banktech.javachallenge.service.domain.submarine.MoveRequest;
+import com.banktech.javachallenge.service.domain.submarine.ShootRequest;
 import com.banktech.javachallenge.service.domain.submarine.Submarine;
 
 
@@ -22,6 +23,14 @@ public interface World {
      * @param moveRequest {@link MoveRequest}
      */
     void move(final Submarine submarine, final MoveRequest moveRequest);
+
+    /**
+     * Shoot with selected {@link Submarine}.
+     *
+     * @param submarine    {@link Submarine}
+     * @param shootRequest {@link ShootRequest}
+     */
+    void shoot(final Submarine submarine, final ShootRequest shootRequest);
 
     /**
      * Gives back the width and height of the world.

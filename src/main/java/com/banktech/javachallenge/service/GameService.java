@@ -45,7 +45,7 @@ public interface GameService {
      * @return SimpleResponse
      */
     @POST("game/{gameId}")
-    Call<SimpleResponse> joinGame(@Path("gameId") Integer gameId);
+    Call<SimpleResponse> joinGame(@Path("gameId") Long gameId);
 
     /**
      * Lekéri a megadott azonosítójú játék adatait.

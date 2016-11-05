@@ -2,6 +2,7 @@ package com.banktech.javachallenge.world;
 
 import com.banktech.javachallenge.service.domain.Position;
 import com.banktech.javachallenge.service.domain.submarine.MoveRequest;
+import com.banktech.javachallenge.service.domain.submarine.ShootRequest;
 import com.banktech.javachallenge.service.domain.submarine.Submarine;
 
 import java.util.HashMap;
@@ -23,6 +24,7 @@ public class ServerWorld implements World {
      * @param position {@link Position}
      * @return {@link Submarine} or {@link Island} or {@link Torpedo} or Null if nothing is there.
      */
+    @Override
     public Object cellAt(final Position position) {
         return map.get(position);
     }
@@ -33,12 +35,23 @@ public class ServerWorld implements World {
      * @param submarine   {@link Submarine}
      * @param moveRequest {@link MoveRequest}
      */
+    @Override
     public void move(final Submarine submarine, final MoveRequest moveRequest) {
         Submarine selectedSubmarine = (Submarine) cellAt(submarine.getPosition());
         map.remove(submarine);
         Position newPosition = calculateMovement(selectedSubmarine, moveRequest);
         selectedSubmarine.setPosition(newPosition);
         map.put(newPosition, selectedSubmarine);
+    }
+    /**
+     * Shoot with selected {@link Submarine}.
+     *
+     * @param submarine    {@link Submarine}
+     * @param shootRequest {@link ShootRequest}
+     */
+    @Override
+    public void shoot(Submarine submarine, ShootRequest shootRequest) {
+
     }
 
     /**

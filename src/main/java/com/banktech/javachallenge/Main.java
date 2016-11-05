@@ -1,12 +1,13 @@
 package com.banktech.javachallenge;
 
-import com.banktech.javachallenge.service.Api;
+import com.banktech.javachallenge.service.*;
+import com.banktech.javachallenge.service.domain.game.CreateGameResponse;
 import com.banktech.javachallenge.service.domain.game.GameResponse;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import com.banktech.javachallenge.view.GUIListener;
+import com.banktech.javachallenge.view.ViewModel;
 
 import java.io.IOException;
+import java.util.List;
 
 /**
  *
@@ -15,30 +16,27 @@ public class Main {
 
     public static void main(String[] args) {
         startUp(args);
-        exampleApiCall();
-        exampleApiCallAsync();
-    }
-
-    private static void exampleApiCall() {
-        try {
-            Response<GameResponse> response = Api.gameService().listGames().execute();
-            GameResponse runningGames = response.body();
-            System.out.println(runningGames);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private static void exampleApiCallAsync() {
-        Api.gameService().listGames().enqueue(new Callback<GameResponse>() {
-            public void onResponse(Call<GameResponse> call, Response<GameResponse> response) {
-                GameResponse runningGames = response.body();
+        GUIListener guiListener = new GUIListener() {
+            @Override
+            public void refresh(List<ViewModel> turns) {
+                //refresh gui
             }
-
-            public void onFailure(Call<GameResponse> call, Throwable throwable) {
-                throwable.printStackTrace();
+        };
+        GameRunner gameRunner = new GameRunner(guiListener);
+        new Thread(() -> {
+            try {
+                GameResponse runningGames = gameRunner.listGames();
+                if (runningGames.getGames().isEmpty()) {
+                    CreateGameResponse createGameResponse = gameRunner.startGame();
+                    gameRunner.joinGame(createGameResponse.getId());
+                }else{
+                    System.out.println(runningGames);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-        });
+        }).start();
+
     }
 
     private static void startUp(String[] args) {

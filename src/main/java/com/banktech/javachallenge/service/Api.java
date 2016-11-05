@@ -2,14 +2,11 @@ package com.banktech.javachallenge.service;
 
 import com.google.common.base.Strings;
 import com.google.gson.GsonBuilder;
-import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
-import okhttp3.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-import java.io.IOException;
 
 /**
  *
@@ -61,20 +58,18 @@ public class Api {
 
     private OkHttpClient clientFactory() {
         OkHttpClient.Builder builder = new OkHttpClient().newBuilder();
-        builder.interceptors().add(new Interceptor() {
-            public Response intercept(Chain chain) throws IOException {
-                String token = getToken();
-                Request original = chain.request();
-                Request.Builder requestBuilder = original.newBuilder();
-                requestBuilder.header("Accept", "application/json");
-                if (!Strings.isNullOrEmpty(token)) {
-                    requestBuilder.addHeader("TEAMTOKEN", token);
-                }
-
-                Request request = requestBuilder.build();
-                return chain.proceed(request);
-
+        builder.interceptors().add(chain -> {
+            String token1 = getToken();
+            Request original = chain.request();
+            Request.Builder requestBuilder = original.newBuilder();
+            requestBuilder.header("Accept", "application/json");
+            if (Strings.isNullOrEmpty(token1)) {
+                requestBuilder.addHeader("TEAMTOKEN", token1);
             }
+
+            Request request = requestBuilder.build();
+            return chain.proceed(request);
+
         });
 
         return builder.build();
