@@ -73,15 +73,6 @@ public class Api {
             return chain.proceed(request);
 
         });
-        builder.interceptors().add(chain -> {
-            try {
-                return chain.proceed(chain.request());
-            } catch (Exception e) {
-                e.printStackTrace();
-                return new okhttp3.Response.Builder().code(500).message("Timeout").protocol(Protocol.HTTP_1_1).request(chain.request()).build();
-            }
-        });
-
 
         return builder.build();
     }

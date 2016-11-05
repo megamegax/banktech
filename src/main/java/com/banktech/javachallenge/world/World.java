@@ -2,12 +2,10 @@ package com.banktech.javachallenge.world;
 
 import com.banktech.javachallenge.service.domain.Position;
 import com.banktech.javachallenge.service.domain.submarine.MoveRequest;
-import com.banktech.javachallenge.service.domain.submarine.OwnSubmarine;
 import com.banktech.javachallenge.service.domain.submarine.ShootRequest;
 import com.banktech.javachallenge.service.domain.submarine.Submarine;
 
 import java.io.IOException;
-import java.util.List;
 
 
 public interface World {

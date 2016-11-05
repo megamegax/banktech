@@ -8,12 +8,15 @@ import com.banktech.javachallenge.view.ApiCall;
 import com.banktech.javachallenge.view.GUIListener;
 import com.banktech.javachallenge.view.ViewModel;
 import com.banktech.javachallenge.world.ClientWorld;
+import retrofit2.Call;
+import retrofit2.Callback;
 import retrofit2.Response;
 
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 
 public class GameRunner {
@@ -27,26 +30,44 @@ public class GameRunner {
     }
 
 
-    GameResponse listGames() throws IOException {
-        String method = Api.gameService().listGames().request().method();
-        String url = Api.gameService().listGames().request().url().url().toString();
+    void listGames(Consumer<GameResponse> consumer) {
+        Call<GameResponse> gameResponseCall = Api.gameService().listGames();
+        String method = gameResponseCall.request().method();
+        String url = gameResponseCall.request().url().url().toString();
+        gameResponseCall.enqueue(new Callback<GameResponse>() {
+            @Override
+            public void onResponse(Call<GameResponse> call, Response<GameResponse> response) {
+                if (response.isSuccessful()) {
+                    handleConnectionErrors(response);
+                    if (response.body() != null) {
+                        GameResponse gameResponse = response.body();
+                        SimpleResponse simpleResponse = new SimpleResponse(gameResponse.getMessage(), gameResponse.getCode());
+                        ApiCall apiCall = new ApiCall(method, url, simpleResponse);
+                        refreshCallHistory(apiCall);
 
-        Response<GameResponse> response = Api.gameService().listGames().execute();
-        handleConnectionErrors(response);
-        if (response.body() != null) {
-            GameResponse gameResponse = response.body();
-            SimpleResponse simpleResponse = new SimpleResponse(gameResponse.getMessage(), gameResponse.getCode());
-            ApiCall apiCall = new ApiCall(method, url, simpleResponse);
-            refreshCallHistory(apiCall);
-            return gameResponse;
-        }
-        return null;
+                        consumer.accept(gameResponse);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<GameResponse> call, Throwable throwable) {
+                throwable.printStackTrace();
+            }
+        });
     }
 
-    private void handleConnectionErrors(Response response) throws IOException {
-        if (response.errorBody() != null) {
-            System.out.println(response.message());
-            System.out.println(response.errorBody().string());
+
+    private void handleConnectionErrors(Response response) {
+        if (response != null) {
+            if (response.errorBody() != null) {
+                System.out.println(response.message());
+                try {
+                    System.out.println(response.errorBody().string());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 
@@ -54,11 +75,16 @@ public class GameRunner {
         return turns.size() - 1;
     }
 
-    CreateGameResponse startGame() throws IOException {
+    CreateGameResponse startGame() {
         String method = Api.gameService().createGame().request().method();
         String url = Api.gameService().createGame().request().url().url().toString();
 
-        Response<CreateGameResponse> response = Api.gameService().createGame().execute();
+        Response<CreateGameResponse> response = null;
+        try {
+            response = Api.gameService().createGame().execute();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         handleConnectionErrors(response);
 
         if (response.body() != null) {
@@ -77,39 +103,57 @@ public class GameRunner {
         listener.refresh(turns);
     }
 
-    void joinGame(Long gameId) throws IOException {
+    private void refreshGui() {
+        listener.refresh(turns);
+    }
+
+    void joinGame(Long gameId) {
         String method = Api.gameService().joinGame(gameId).request().method();
         String url = Api.gameService().joinGame(gameId).request().url().url().toString();
 
-        Response<SimpleResponse> response = Api.gameService().joinGame(gameId).execute();
+        Response<SimpleResponse> response = null;
+        try {
+            response = Api.gameService().joinGame(gameId).execute();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         handleConnectionErrors(response);
         this.gameId = gameId;
         if (response.body() != null) {
             SimpleResponse simpleResponse = response.body();
             ApiCall apiCall = new ApiCall(method, url, simpleResponse);
-
-            loadGameInfo(gameId);
             refreshCallHistory(apiCall);
+            loadGameInfo(gameId, game -> refreshGui());
+
         }
     }
 
-    private Game loadGameInfo(Long gameId) throws IOException {
+    private void loadGameInfo(Long gameId, Consumer<Game> consumer) {
         String method = Api.gameService().gameInfo(gameId).request().method();
         String url = Api.gameService().gameInfo(gameId).request().url().url().toString();
+        Api.gameService().gameInfo(gameId).enqueue(new Callback<GameInfoResponse>() {
+            @Override
+            public void onResponse(Call<GameInfoResponse> call, Response<GameInfoResponse> response) {
+                if (response.isSuccessful()) {
+                    handleConnectionErrors(response);
+                    if (response.body() != null) {
+                        GameInfoResponse gameInfo = response.body();
+                        getCurrentViewModel().setGame(gameInfo.getGame());
+                        SimpleResponse simpleResponse = new SimpleResponse(gameInfo.getMessage(), gameInfo.getCode());
+                        ApiCall apiCall = new ApiCall(method, url, simpleResponse);
+                        refreshCallHistory(apiCall);
+                        consumer.accept(gameInfo.getGame());
+                        getCurrentViewModel().setWorldMap(new ClientWorld(gameInfo.getGame()));
+                    }
+                }
+            }
 
-        Response<GameInfoResponse> response = Api.gameService().gameInfo(gameId).execute();
-        handleConnectionErrors(response);
-        if (response.body() != null) {
-            GameInfoResponse gameInfo = response.body();
-            getCurrentViewModel().setGame(gameInfo.getGame());
-            SimpleResponse simpleResponse = new SimpleResponse(gameInfo.getMessage(), gameInfo.getCode());
-            ApiCall apiCall = new ApiCall(method, url, simpleResponse);
-            refreshCallHistory(apiCall);
+            @Override
+            public void onFailure(Call<GameInfoResponse> call, Throwable throwable) {
+                throwable.printStackTrace();
+            }
+        });
 
-            getCurrentViewModel().setWorldMap(new ClientWorld(gameInfo.getGame()));
-            return gameInfo.getGame();
-        }
-        return null;
     }
 
 
@@ -119,47 +163,69 @@ public class GameRunner {
         calls.forEach(apiCall -> System.out.println(apiCall.getMethod() + ":" + apiCall.getUrl() + " -> " + apiCall.getResponse()));
     }
 
-    void play() throws IOException {
-        Game game = loadGameInfo(gameId);
-        boolean alreadyUsedTurn = false;
-        while (!game.getStatus().equals(Status.ENDED)) {
-            if (isNextTurn(game)) {
-                incTurn();
-                alreadyUsedTurn = false;
-            }
-            if (!alreadyUsedTurn) {
-                if (getCurrentTurn() < 151) {
-                    loadOwnSubmarines();
+    void play() {
+        loadGameInfo(gameId, (game) -> {
+            final boolean[] alreadyUsedTurn = {false};
+            final boolean[] finish = {false};
+            while (!finish[0]) {
+                loadGameInfo(gameId, (newGame -> {
+                    if (newGame.getStatus().equals(Status.ENDED)) {
+                        System.out.println(newGame);
+                        finish[0] = true;
+                    }
+                    if (isNextTurn(newGame)) {
+                        incTurn();
+                        alreadyUsedTurn[0] = false;
+                    }
+                    if (!alreadyUsedTurn[0]) {
+                        if (getCurrentTurn() < 151) {
+                            loadOwnSubmarines();
+                        }
+                        alreadyUsedTurn[0] = true;
+                        printLogs();
+                    }
                 }
-                alreadyUsedTurn = true;
-                printLogs();
+                ));
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
-            try {
-                Thread.sleep(500);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            game = loadGameInfo(gameId);
-        }
+            System.out.println("Játék vége!");
+        });
+
 
     }
 
-    private void loadOwnSubmarines() throws IOException {
+    private void loadOwnSubmarines() {
         String method = Api.gameService().gameInfo(gameId).request().method();
         String url = Api.gameService().gameInfo(gameId).request().url().url().toString();
-        Response<SubmarineResponse> response = Api.submarineService().listSubmarines(gameId).execute();
-        handleConnectionErrors(response);
-        if (response.body() != null) {
-            List<OwnSubmarine> submarines = response.body().getSubmarines();
-            SimpleResponse simpleResponse = new SimpleResponse(response.body().getMessage(), response.body().getCode());
-            ApiCall apiCall = new ApiCall(method, url, simpleResponse);
-            refreshCallHistory(apiCall);
-            submarines.forEach(ownSubmarine -> {
-                getCurrentViewModel().getWorldMap().replaceCell(ownSubmarine.getPosition(), ownSubmarine);
-            });
+        Api.submarineService().listSubmarines(gameId).enqueue(new Callback<SubmarineResponse>() {
+            @Override
+            public void onResponse(Call<SubmarineResponse> call, Response<SubmarineResponse> response) {
+                if (response.isSuccessful()) {
+                    handleConnectionErrors(response);
+                    if (response.body() != null) {
+                        List<OwnSubmarine> submarines = response.body().getSubmarines();
+                        SimpleResponse simpleResponse = new SimpleResponse(response.body().getMessage(), response.body().getCode());
+                        ApiCall apiCall = new ApiCall(method, url, simpleResponse);
+                        refreshCallHistory(apiCall);
+                        submarines.forEach(ownSubmarine -> {
+                            getCurrentViewModel().getWorldMap().replaceCell(ownSubmarine.getPosition(), ownSubmarine);
+                        });
 
-            getCurrentViewModel().setOwnSubmarines(submarines);
-        }
+                        getCurrentViewModel().setOwnSubmarines(submarines);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<SubmarineResponse> call, Throwable throwable) {
+                throwable.printStackTrace();
+            }
+        });
+
     }
 
     private ViewModel getCurrentViewModel() {
