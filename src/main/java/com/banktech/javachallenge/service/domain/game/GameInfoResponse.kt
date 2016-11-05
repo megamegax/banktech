@@ -1,6 +1,6 @@
 package com.banktech.javachallenge.service.domain.game
 
-import com.banktech.javachallenge.service.domain.Coordinate
+import com.banktech.javachallenge.service.domain.Position
 
 /**
  *
@@ -11,7 +11,7 @@ data class GameInfoResponse(val game: Game,
 
 data class MapConfiguration(val width: Int,
                             val height: Int,
-                            val islandPositions: List<Coordinate>,
+                            val islandPositions: List<Position>,
                             val teamCount: Int,
                             val submarinesPerTeam: Int,
                             val torpedoDamage: Int,
