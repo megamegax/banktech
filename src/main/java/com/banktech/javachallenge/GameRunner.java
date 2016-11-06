@@ -223,8 +223,14 @@ public class GameRunner {
     private void loadOwnSubmarines() throws IOException {
         String method = Api.gameService().gameInfo(gameId).request().method();
         String url = Api.gameService().gameInfo(gameId).request().url().url().toString();
-        Response<SubmarineResponse> response = Api.submarineService().listSubmarines(gameId).execute();
-        if (response.isSuccessful()) {
+        Response<SubmarineResponse> response = null;
+        try {
+            response = Api.submarineService().listSubmarines(gameId).execute();
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("Possible Timeout");
+        }
+        if (response != null && response.isSuccessful()) {
             handleConnectionErrors(response);
             if (response.body() != null) {
                 List<OwnSubmarine> submarines = response.body().getSubmarines();

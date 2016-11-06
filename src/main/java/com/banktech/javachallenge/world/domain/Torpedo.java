@@ -4,20 +4,27 @@ import com.banktech.javachallenge.service.domain.Position;
 
 
 public class Torpedo {
-    private Position position;
+    private Position currentPosition;
+    private Position startPosition;
+    private Double speed;
+    private Double angle;
+    private Integer startRound;
 
     public Torpedo() {
     }
 
-    public Torpedo(Position position) {
-        this.position = position;
+    public Torpedo(Position startPosition, Double speed, Double angle, Integer startRound) {
+        this.startPosition = startPosition;
+        this.speed = speed;
+        this.angle = angle;
+        this.startRound = startRound;
     }
 
-    public Position getPosition() {
-        return position;
+    public Position getCurrentPosition() {
+        return currentPosition;
     }
 
-    public void setPosition(Position position) {
-        this.position = position;
+    public void setCurrentPosition(Position currentPosition) {
+        this.currentPosition = currentPosition;
     }
 }
