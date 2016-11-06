@@ -31,7 +31,7 @@ public class SimpleResponse {
 
     @Override
     public String toString() {
-        return "SimpleResponse{" +
+        return "{" +
                 "message='" + message +
                 ", code=" + code +
                 '}';

@@ -1,8 +1,8 @@
 package com.banktech.javachallenge.view.domain;
 
 import com.banktech.javachallenge.service.domain.game.Game;
+import com.banktech.javachallenge.service.domain.submarine.Entity;
 import com.banktech.javachallenge.service.domain.submarine.OwnSubmarine;
-import com.banktech.javachallenge.service.domain.submarine.Submarine;
 import com.banktech.javachallenge.world.World;
 import com.banktech.javachallenge.world.domain.Torpedo;
 
@@ -13,8 +13,9 @@ public class ViewModel {
     private Game game;
     private List<ApiCall> calls;
     private List<OwnSubmarine> ownSubmarines;
-    private List<Submarine> detectedSubmarines;
+    private List<Entity> detectedSubmarines;
     private List<Torpedo> shootedTorpedos;
+    private List<Entity> detectedTorpedos;
     private World worldMap;
 
     public ViewModel() {
@@ -22,15 +23,16 @@ public class ViewModel {
         ownSubmarines = new ArrayList<>();
         detectedSubmarines = new ArrayList<>();
         shootedTorpedos = new ArrayList<>();
+        detectedTorpedos = new ArrayList<>();
     }
 
-    public ViewModel(Game game, List<ApiCall> calls, List<OwnSubmarine> ownSubmarines, List<Submarine> detectedSubmarines,
-            List<Torpedo> shootedTorpedos, World worldMap) {
+    public ViewModel(Game game, List<ApiCall> calls, List<OwnSubmarine> ownSubmarines, List<Entity> detectedSubmarines,List<Entity>detectedTorpedos, List<Torpedo> shootedTorpedos, World worldMap) {
         this.game = game;
         this.calls = calls;
         this.ownSubmarines = ownSubmarines;
         this.detectedSubmarines = detectedSubmarines;
         this.shootedTorpedos = shootedTorpedos;
+        this.detectedTorpedos = detectedTorpedos;
         this.worldMap = worldMap;
     }
 
@@ -58,11 +60,11 @@ public class ViewModel {
         this.ownSubmarines = ownSubmarines;
     }
 
-    public synchronized List<Submarine> getDetectedSubmarines() {
+    public synchronized List<Entity> getDetectedSubmarines() {
         return detectedSubmarines;
     }
 
-    public synchronized void setDetectedSubmarines(List<Submarine> detectedSubmarines) {
+    public synchronized void setDetectedSubmarines(List<Entity> detectedSubmarines) {
         this.detectedSubmarines = detectedSubmarines;
     }
 
@@ -75,11 +77,21 @@ public class ViewModel {
     }
 
     public synchronized ViewModel cloneToNewTurn() {
-        return new ViewModel(game, new ArrayList<>(), ownSubmarines, detectedSubmarines, shootedTorpedos, worldMap);
+        return new ViewModel(game, new ArrayList<>(), ownSubmarines, detectedSubmarines,detectedTorpedos, shootedTorpedos, worldMap);
     }
 
+    public synchronized void setShootedTorpedos(List<Torpedo> shootedTorpedos){
+        this.shootedTorpedos = shootedTorpedos;
+    }
     public synchronized List<Torpedo> getShootedTorpedos() {
         return shootedTorpedos;
     }
 
+    public List<Entity> getDetectedTorpedos() {
+        return detectedTorpedos;
+    }
+
+    public void setDetectedTorpedos(List<Entity> detectedTorpedos) {
+        this.detectedTorpedos = detectedTorpedos;
+    }
 }

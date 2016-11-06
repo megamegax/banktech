@@ -1,0 +1,260 @@
+package com.banktech.javachallenge.service.domain.game;
+
+import com.banktech.javachallenge.service.domain.Position;
+
+import java.util.List;
+
+/**
+ * Created by Mihaly on 2016. 11. 06..
+ */
+public class MapConfiguration {
+    private Integer width;
+    private Integer height;
+    private List<Position> islandPositions;
+    private Integer teamCount;
+    private Integer submarinesPerTeam;
+    private Integer torpedoDamate;
+    private Integer torpedoHitScore;
+    private Integer torpedoHitPenalty;
+    private Integer torpedoCooldown;
+    private Integer sonarRange;
+    private Integer extendedSonarRange;
+    private Integer extendedSonarRounds;
+    private Integer extendedSonarCooldown;
+    private Integer torpedoSpeed;
+    private Integer torpedoExplosionRadius;
+    private Integer roundLength;
+    private Integer islandSize;
+    private Integer submarineSize;
+    private Integer rounds;
+    private Integer maxSteeringPerRound;
+    private Integer maxAccelerationPerRound;
+    private Integer maxSpeed;
+    private Integer torpedoRange;
+    private Integer rateLimitedPenalty;
+
+    public MapConfiguration() {
+    }
+
+    public Integer getWidth() {
+        return width;
+    }
+
+    public void setWidth(Integer width) {
+        this.width = width;
+    }
+
+    public Integer getHeight() {
+        return height;
+    }
+
+    public void setHeight(Integer height) {
+        this.height = height;
+    }
+
+    public List<Position> getIslandPositions() {
+        return islandPositions;
+    }
+
+    public void setIslandPositions(List<Position> islandPositions) {
+        this.islandPositions = islandPositions;
+    }
+
+    public Integer getTeamCount() {
+        return teamCount;
+    }
+
+    public void setTeamCount(Integer teamCount) {
+        this.teamCount = teamCount;
+    }
+
+    public Integer getSubmarinesPerTeam() {
+        return submarinesPerTeam;
+    }
+
+    public void setSubmarinesPerTeam(Integer submarinesPerTeam) {
+        this.submarinesPerTeam = submarinesPerTeam;
+    }
+
+    public Integer getTorpedoDamate() {
+        return torpedoDamate;
+    }
+
+    public void setTorpedoDamate(Integer torpedoDamate) {
+        this.torpedoDamate = torpedoDamate;
+    }
+
+    public Integer getTorpedoHitScore() {
+        return torpedoHitScore;
+    }
+
+    public void setTorpedoHitScore(Integer torpedoHitScore) {
+        this.torpedoHitScore = torpedoHitScore;
+    }
+
+    public Integer getTorpedoHitPenalty() {
+        return torpedoHitPenalty;
+    }
+
+    public void setTorpedoHitPenalty(Integer torpedoHitPenalty) {
+        this.torpedoHitPenalty = torpedoHitPenalty;
+    }
+
+    public Integer getTorpedoCooldown() {
+        return torpedoCooldown;
+    }
+
+    public void setTorpedoCooldown(Integer torpedoCooldown) {
+        this.torpedoCooldown = torpedoCooldown;
+    }
+
+    public Integer getSonarRange() {
+        return sonarRange;
+    }
+
+    public void setSonarRange(Integer sonarRange) {
+        this.sonarRange = sonarRange;
+    }
+
+    public Integer getExtendedSonarRange() {
+        return extendedSonarRange;
+    }
+
+    public void setExtendedSonarRange(Integer extendedSonarRange) {
+        this.extendedSonarRange = extendedSonarRange;
+    }
+
+    public Integer getExtendedSonarRounds() {
+        return extendedSonarRounds;
+    }
+
+    public void setExtendedSonarRounds(Integer extendedSonarRounds) {
+        this.extendedSonarRounds = extendedSonarRounds;
+    }
+
+    public Integer getExtendedSonarCooldown() {
+        return extendedSonarCooldown;
+    }
+
+    public void setExtendedSonarCooldown(Integer extendedSonarCooldown) {
+        this.extendedSonarCooldown = extendedSonarCooldown;
+    }
+
+    public Integer getTorpedoSpeed() {
+        return torpedoSpeed;
+    }
+
+    public void setTorpedoSpeed(Integer torpedoSpeed) {
+        this.torpedoSpeed = torpedoSpeed;
+    }
+
+    public Integer getTorpedoExplosionRadius() {
+        return torpedoExplosionRadius;
+    }
+
+    public void setTorpedoExplosionRadius(Integer torpedoExplosionRadius) {
+        this.torpedoExplosionRadius = torpedoExplosionRadius;
+    }
+
+    public Integer getRoundLength() {
+        return roundLength;
+    }
+
+    public void setRoundLength(Integer roundLength) {
+        this.roundLength = roundLength;
+    }
+
+    public Integer getIslandSize() {
+        return islandSize;
+    }
+
+    public void setIslandSize(Integer islandSize) {
+        this.islandSize = islandSize;
+    }
+
+    public Integer getSubmarineSize() {
+        return submarineSize;
+    }
+
+    public void setSubmarineSize(Integer submarineSize) {
+        this.submarineSize = submarineSize;
+    }
+
+    public Integer getRounds() {
+        return rounds;
+    }
+
+    public void setRounds(Integer rounds) {
+        this.rounds = rounds;
+    }
+
+    public Integer getMaxSteeringPerRound() {
+        return maxSteeringPerRound;
+    }
+
+    public void setMaxSteeringPerRound(Integer maxSteeringPerRound) {
+        this.maxSteeringPerRound = maxSteeringPerRound;
+    }
+
+    public Integer getMaxAccelerationPerRound() {
+        return maxAccelerationPerRound;
+    }
+
+    public void setMaxAccelerationPerRound(Integer maxAccelerationPerRound) {
+        this.maxAccelerationPerRound = maxAccelerationPerRound;
+    }
+
+    public Integer getMaxSpeed() {
+        return maxSpeed;
+    }
+
+    public void setMaxSpeed(Integer maxSpeed) {
+        this.maxSpeed = maxSpeed;
+    }
+
+    public Integer getTorpedoRange() {
+        return torpedoRange;
+    }
+
+    public void setTorpedoRange(Integer torpedoRange) {
+        this.torpedoRange = torpedoRange;
+    }
+
+    public Integer getRateLimitedPenalty() {
+        return rateLimitedPenalty;
+    }
+
+    public void setRateLimitedPenalty(Integer rateLimitedPenalty) {
+        this.rateLimitedPenalty = rateLimitedPenalty;
+    }
+
+    @Override
+    public String toString() {
+        return "MapConfiguration{" +
+                "width=" + width +
+                ", height=" + height +
+                ", islandPositions=" + islandPositions +
+                ", teamCount=" + teamCount +
+                ", submarinesPerTeam=" + submarinesPerTeam +
+                ", torpedoDamate=" + torpedoDamate +
+                ", torpedoHitScore=" + torpedoHitScore +
+                ", torpedoHitPenalty=" + torpedoHitPenalty +
+                ", torpedoCooldown=" + torpedoCooldown +
+                ", sonarRange=" + sonarRange +
+                ", extendedSonarRange=" + extendedSonarRange +
+                ", extendedSonarRounds=" + extendedSonarRounds +
+                ", extendedSonarCooldown=" + extendedSonarCooldown +
+                ", torpedoSpeed=" + torpedoSpeed +
+                ", torpedoExplosionRadius=" + torpedoExplosionRadius +
+                ", roundLength=" + roundLength +
+                ", islandSize=" + islandSize +
+                ", submarineSize=" + submarineSize +
+                ", rounds=" + rounds +
+                ", maxSteeringPerRound=" + maxSteeringPerRound +
+                ", maxAccelerationPerRound=" + maxAccelerationPerRound +
+                ", maxSpeed=" + maxSpeed +
+                ", torpedoRange=" + torpedoRange +
+                ", rateLimitedPenalty=" + rateLimitedPenalty +
+                '}';
+    }
+}

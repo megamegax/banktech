@@ -4,24 +4,24 @@ import java.io.IOException;
 
 import com.banktech.javachallenge.service.Api;
 import com.banktech.javachallenge.service.domain.game.CreateGameResponse;
-import com.banktech.javachallenge.view.gui.View;
+import com.banktech.javachallenge.view.gui.jfx.TorpedoController;
+import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
+import javafx.scene.layout.Pane;
+import javafx.stage.Stage;
 
 /**
  *
  */
-public class Main {
+public class Main extends Application {
 
     public static void main(String[] args) {
         startUp(args);
-        View view = new View();
-        GameRunner gameRunner = new GameRunner(view);
-        new Thread(() -> {
-            try {
-                initializeGame(gameRunner);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }).start();
+        //  View view = new View();
+        //  GameRunner gameRunner = new GameRunner(view);
+        launch(args);
+
 
     }
 
@@ -69,5 +69,28 @@ public class Main {
 
     public static String ourTeamName() {
         return "Nightmare Build";
+    }
+
+    @Override
+    public void start(Stage primaryStage) throws Exception {
+
+
+        primaryStage.setTitle("Torpedo");
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("Torpedo.fxml"));
+        Pane panel = loader.load();
+        Scene scene = new Scene(panel);
+        primaryStage.setScene(scene);
+
+        TorpedoController torpedoController = loader.getController();
+        primaryStage.show();
+        GameRunner gameRunner = new GameRunner(torpedoController);
+        primaryStage.setOnCloseRequest(event -> System.exit(0));
+        new Thread(() -> {
+            try {
+                initializeGame(gameRunner);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }).start();
     }
 }
