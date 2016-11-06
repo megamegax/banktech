@@ -93,6 +93,9 @@ local.properties
 .classpath
 
 # Java annotation processor (APT)
+
+# Word temporary
+~$*.doc*
 .factorypath
 
 # PDT-specific (PHP Development Tools)
