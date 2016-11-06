@@ -1,4 +1,4 @@
-package com.banktech.javachallenge.view.gui;
+package com.banktech.javachallenge.view.gui.swing;
 
 import com.banktech.javachallenge.view.GUIListener;
 import com.banktech.javachallenge.view.domain.ViewModel;

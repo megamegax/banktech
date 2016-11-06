@@ -1,4 +1,4 @@
-package com.banktech.javachallenge.view.gui;
+package com.banktech.javachallenge.view.gui.swing;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -8,8 +8,8 @@ import java.util.List;
 import javax.swing.JPanel;
 
 import com.banktech.javachallenge.service.domain.Position;
+import com.banktech.javachallenge.service.domain.submarine.Entity;
 import com.banktech.javachallenge.service.domain.submarine.OwnSubmarine;
-import com.banktech.javachallenge.service.domain.submarine.Submarine;
 import com.banktech.javachallenge.view.domain.ViewModel;
 import com.banktech.javachallenge.world.domain.Torpedo;
 
@@ -49,12 +49,12 @@ public class MapPanel extends JPanel {
                 drawSpeed(g, submarine.getPosition(), submarine.getAngle(), submarine.getVelocity());
             }
             g.setColor(Color.RED);
-            List<Submarine> enemySubmarines = viewModel.getDetectedSubmarines();
-            for (Submarine submarine : enemySubmarines) {
+            List<Entity> enemySubmarines = viewModel.getDetectedSubmarines();
+            for (Entity submarine : enemySubmarines) {
                 drawFillCircle(g, submarine.getPosition(), viewModel.getGame().getMapConfiguration().getSubmarineSize());
             }
             g.setColor(Color.BLACK);
-            for (Submarine submarine : enemySubmarines) {
+            for (Entity submarine : enemySubmarines) {
                 drawSpeed(g, submarine.getPosition(), submarine.getAngle(), submarine.getVelocity());
             }
             g.setColor(Color.BLACK);
@@ -63,6 +63,13 @@ public class MapPanel extends JPanel {
                 drawFillCircle(g, torpedo.getCurrentPosition(), 2);
                 drawCircle(g, torpedo.getCurrentPosition(), viewModel.getGame().getMapConfiguration().getTorpedoRange());
                 drawSpeed(g, torpedo.getCurrentPosition(), torpedo.getAngle(), torpedo.getSpeed());
+            }
+
+            List<Entity> detectedTorpedos = viewModel.getDetectedTorpedos();
+            for (Entity torpedo : detectedTorpedos) {
+                drawFillCircle(g, torpedo.getPosition(), 2);
+                drawCircle(g, torpedo.getPosition(), viewModel.getGame().getMapConfiguration().getTorpedoRange());
+                drawSpeed(g, torpedo.getPosition(), torpedo.getAngle(), torpedo.getVelocity());
             }
         }
     }
