@@ -1,5 +1,7 @@
 package com.banktech.javachallenge.view;
 
+import com.banktech.javachallenge.view.domain.ViewModel;
+
 import java.util.List;
 
 /**

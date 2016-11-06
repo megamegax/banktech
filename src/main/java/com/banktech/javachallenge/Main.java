@@ -4,7 +4,7 @@ import java.io.IOException;
 
 import com.banktech.javachallenge.service.Api;
 import com.banktech.javachallenge.service.domain.game.CreateGameResponse;
-import com.banktech.javachallenge.view.View;
+import com.banktech.javachallenge.view.gui.View;
 
 /**
  *

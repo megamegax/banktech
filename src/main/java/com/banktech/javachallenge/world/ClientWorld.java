@@ -6,6 +6,8 @@ import com.banktech.javachallenge.service.domain.game.Game;
 import com.banktech.javachallenge.service.domain.submarine.MoveRequest;
 import com.banktech.javachallenge.service.domain.submarine.ShootRequest;
 import com.banktech.javachallenge.service.domain.submarine.Submarine;
+import com.banktech.javachallenge.world.domain.Island;
+import com.banktech.javachallenge.world.domain.Torpedo;
 
 import java.io.IOException;
 import java.util.HashMap;

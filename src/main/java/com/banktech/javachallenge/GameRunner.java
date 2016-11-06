@@ -16,9 +16,9 @@ import com.banktech.javachallenge.service.domain.logic.GameLogic;
 import com.banktech.javachallenge.service.domain.logic.SimpleGameLogic;
 import com.banktech.javachallenge.service.domain.submarine.OwnSubmarine;
 import com.banktech.javachallenge.service.domain.submarine.SubmarineResponse;
-import com.banktech.javachallenge.view.ApiCall;
+import com.banktech.javachallenge.view.domain.ApiCall;
 import com.banktech.javachallenge.view.GUIListener;
-import com.banktech.javachallenge.view.ViewModel;
+import com.banktech.javachallenge.view.domain.ViewModel;
 import com.banktech.javachallenge.world.ClientWorld;
 
 import retrofit2.Call;

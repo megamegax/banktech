@@ -1,4 +1,4 @@
-package com.banktech.javachallenge.view;
+package com.banktech.javachallenge.view.domain;
 
 import com.banktech.javachallenge.service.domain.game.SimpleResponse;
 

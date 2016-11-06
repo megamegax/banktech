@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.banktech.javachallenge.service.domain.Position;
-import com.banktech.javachallenge.view.MapPanel;
+import com.banktech.javachallenge.view.gui.MapPanel;
 
 public class Submarine {
     protected String type;

@@ -9,7 +9,7 @@ import com.banktech.javachallenge.service.domain.Position;
 import com.banktech.javachallenge.service.domain.game.MapConfiguration;
 import com.banktech.javachallenge.service.domain.submarine.MoveRequest;
 import com.banktech.javachallenge.service.domain.submarine.OwnSubmarine;
-import com.banktech.javachallenge.view.ViewModel;
+import com.banktech.javachallenge.view.domain.ViewModel;
 import com.banktech.javachallenge.world.World;
 
 public class SimpleGameLogic implements GameLogic {
