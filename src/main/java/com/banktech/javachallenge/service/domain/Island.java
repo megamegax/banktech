@@ -1,7 +1,5 @@
 package com.banktech.javachallenge.service.domain;
 
-import com.banktech.javachallenge.service.domain.Position;
-
 
 public class Island {
     private Position position;

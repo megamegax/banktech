@@ -1,6 +1,5 @@
 package com.banktech.javachallenge.service.domain;
 
-import com.banktech.javachallenge.service.domain.Position;
 import com.banktech.javachallenge.service.domain.submarine.Entity;
 
 
