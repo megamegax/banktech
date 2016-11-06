@@ -2,7 +2,6 @@ package com.banktech.javachallenge.service;
 
 import com.google.common.base.Strings;
 import com.google.gson.GsonBuilder;
-
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import retrofit2.Retrofit;
@@ -21,6 +20,7 @@ public class Api {
     public static final String START_GAME = "startGame";
     public static final String LOAD_GAME_INFO = "loadGameInfo";
     public static final String LOAD_OWN_SUBMARINES = "loadOwnSubmarines";
+    public static final String EXTENDED_SONAR = "extendedSonar";
 
     private static String baseUrl = "195.228.45.100";
     private static Integer port = 8080;

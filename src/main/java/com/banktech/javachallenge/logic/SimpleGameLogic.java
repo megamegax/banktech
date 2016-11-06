@@ -1,20 +1,20 @@
 package com.banktech.javachallenge.logic;
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
 import com.banktech.javachallenge.Main;
 import com.banktech.javachallenge.service.Api;
 import com.banktech.javachallenge.service.domain.Position;
 import com.banktech.javachallenge.service.domain.game.MapConfiguration;
 import com.banktech.javachallenge.service.domain.game.SimpleResponse;
 import com.banktech.javachallenge.service.domain.submarine.*;
+import com.banktech.javachallenge.service.world.World;
 import com.banktech.javachallenge.view.domain.ApiCall;
 import com.banktech.javachallenge.view.domain.ViewModel;
-import com.banktech.javachallenge.service.world.World;
+
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public class SimpleGameLogic implements GameLogic {
     private ViewModel viewModel;
@@ -41,11 +41,30 @@ public class SimpleGameLogic implements GameLogic {
         double angle = avoidCollision(world, submarine);
 
         if (submarine.getSonarCooldown() == 0) {
-        	world.extendedSonar(submarine);
+            handleSonarResponse(extendedSonar(world, submarine));
         }
-        SonarResponse sonarResponse = world.sonar(submarine);
-        handleSonarResponse(sonarResponse);
+        if (submarine.getTorpedoCooldown() == 0) {
+            shoot(world, submarine);
+        }
+        handleSonarResponse(sonar(world, submarine));
         move(world, submarine, speedChange, angle);
+    }
+
+    private SonarResponse sonar(World world, OwnSubmarine submarine) throws IOException {
+        SonarResponse response = world.sonar(submarine);
+        viewModel.getCalls().add(new ApiCall(Api.SONAR, submarine.getId(), response));
+        return response;
+    }
+
+    private SonarResponse extendedSonar(World world, OwnSubmarine submarine) throws IOException {
+        SonarResponse response = world.extendedSonar(submarine);
+        viewModel.getCalls().add(new ApiCall(Api.EXTENDED_SONAR, submarine.getId(), response));
+        return response;
+    }
+
+    private void shoot(World world, OwnSubmarine submarine) throws IOException {
+        SimpleResponse response = world.shoot(submarine, new ShootRequest(submarine.getAngle()));
+        viewModel.getCalls().add(new ApiCall(Api.SHOOT, submarine.getId(), response));
     }
 
     private void move(World world, OwnSubmarine submarine, double speedChange, double angle) throws IOException {
@@ -54,22 +73,25 @@ public class SimpleGameLogic implements GameLogic {
     }
 
     private void handleSonarResponse(SonarResponse sonarResponse) {
-        List<Entity> detectedSubmarines = sonarResponse.getEntities().stream()
-                .filter(entity -> !entity.getOwner().getName().equals(Main.ourTeamName()))
-                .filter(entity -> entity.getType().equals(EntityType.Submarine)).collect(Collectors.toList());
-        viewModel.setDetectedSubmarines(detectedSubmarines);
+        if (sonarResponse != null) {
+            List<Entity> detectedSubmarines = sonarResponse.getEntities().stream()
+                    .filter(entity -> !entity.getOwner().getName().equals(Main.ourTeamName()))
+                    .filter(entity -> entity.getType().equals(EntityType.Submarine)).collect(Collectors.toList());
+            viewModel.setDetectedSubmarines(detectedSubmarines);
 
-        List<Entity> detectedTorpedos = sonarResponse.getEntities().stream()
-                .filter(entity -> !entity.getOwner().getName().equals(Main.ourTeamName()))
-                .filter(entity -> entity.getType().equals(EntityType.Torpedo)).collect(Collectors.toList());
+            List<Entity> detectedTorpedos = sonarResponse.getEntities().stream()
+                    .filter(entity -> !entity.getOwner().getName().equals(Main.ourTeamName()))
+                    .filter(entity -> entity.getType().equals(EntityType.Torpedo)).collect(Collectors.toList());
 
-        viewModel.setDetectedTorpedos(detectedTorpedos);
+            viewModel.setDetectedTorpedos(detectedTorpedos);
 
-        sonarResponse.getEntities().stream()
-                .filter(entity -> entity.getOwner().getName().equals(Main.ourTeamName()))
-                .filter(entity -> entity.getType().equals(EntityType.Submarine)).collect(Collectors.toList())
-                .forEach(entity -> viewModel.getWorldMap().replaceCell(entity.getPosition(), entity));
-
+            sonarResponse.getEntities().stream()
+                    .filter(entity -> entity.getOwner().getName().equals(Main.ourTeamName()))
+                    .filter(entity -> entity.getType().equals(EntityType.Submarine)).collect(Collectors.toList())
+                    .forEach(entity -> viewModel.getWorldMap().replaceCell(entity.getPosition(), entity));
+        } else {
+            System.out.println("VALAMI HIBA VAN!!!");
+        }
     }
 
     private double avoidCollision(World world, OwnSubmarine submarine) {
