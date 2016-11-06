@@ -1,7 +1,7 @@
 package com.banktech.javachallenge.service.domain.submarine;
 
 
-public class OwnSubmarine extends Submarine {
+public class OwnSubmarine extends Entity {
     private Integer hp;
     private Integer sonarCooldown;
     private Integer torpedoCooldown;

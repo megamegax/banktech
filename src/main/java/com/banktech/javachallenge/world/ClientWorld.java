@@ -4,10 +4,7 @@ import com.banktech.javachallenge.service.Api;
 import com.banktech.javachallenge.service.domain.Position;
 import com.banktech.javachallenge.service.domain.game.Game;
 import com.banktech.javachallenge.service.domain.game.SimpleResponse;
-import com.banktech.javachallenge.service.domain.submarine.MoveRequest;
-import com.banktech.javachallenge.service.domain.submarine.ShootRequest;
-import com.banktech.javachallenge.service.domain.submarine.SonarResponse;
-import com.banktech.javachallenge.service.domain.submarine.Submarine;
+import com.banktech.javachallenge.service.domain.submarine.*;
 import com.banktech.javachallenge.world.domain.Island;
 import com.banktech.javachallenge.world.domain.Torpedo;
 import retrofit2.Response;
@@ -32,7 +29,7 @@ public class ClientWorld implements World {
      * Gives back the Cell on the given {@link Position}.
      *
      * @param position {@link Position}
-     * @return {@link Submarine} or {@link Island} or {@link Torpedo} or Null if nothing is there.
+     * @return {@link OwnSubmarine} or {@link Island} or {@link Torpedo} or Null if nothing is there.
      */
     @Override
     public Object cellAt(final Position position) {
@@ -49,19 +46,19 @@ public class ClientWorld implements World {
     }
 
     /**
-     * Moves selected {@link Submarine} on the Map.
+     * Moves selected {@link OwnSubmarine} on the Map.
      *
-     * @param selectedSubmarine {@link Submarine}
+     * @param selectedSubmarine {@link OwnSubmarine}
      * @param moveRequest       {@link MoveRequest}
      */
     @Override
-    public SimpleResponse move(final Submarine selectedSubmarine, final MoveRequest moveRequest) throws IOException {
+    public SimpleResponse move(final OwnSubmarine selectedSubmarine, final MoveRequest moveRequest) throws IOException {
         //noinspection SuspiciousMethodCalls
         map.remove(selectedSubmarine);
         return delegateMovementToServer(moveRequest, selectedSubmarine);
     }
 
-    private SimpleResponse delegateMovementToServer(MoveRequest moveRequest, final Submarine selectedSubmarine) throws IOException {
+    private SimpleResponse delegateMovementToServer(MoveRequest moveRequest, final Entity selectedSubmarine) throws IOException {
         try {
             Response<SimpleResponse> response = Api.submarineService().move(gameId, selectedSubmarine.getId(), moveRequest).execute();
             return response.body();
@@ -71,22 +68,22 @@ public class ClientWorld implements World {
     }
 
     /**
-     * Shoot with selected {@link Submarine}.
+     * Shoot with selected {@link OwnSubmarine}.
      *
-     * @param selectedSubmarine {@link Submarine}
+     * @param selectedSubmarine {@link OwnSubmarine}
      * @param shootRequest      {@link ShootRequest}
      */
     @Override
-    public SimpleResponse shoot(Submarine selectedSubmarine, ShootRequest shootRequest) throws IOException {
+    public SimpleResponse shoot(OwnSubmarine selectedSubmarine, ShootRequest shootRequest) throws IOException {
         return delegateShootToServer(shootRequest, selectedSubmarine);
     }
 
     @Override
-    public SonarResponse sonar(Submarine selectedSubmarine) throws IOException {
+    public SonarResponse sonar(OwnSubmarine selectedSubmarine) throws IOException {
         return delegateSonarToServer(selectedSubmarine);
     }
 
-    private SonarResponse delegateSonarToServer(Submarine selectedSubmarine) throws IOException {
+    private SonarResponse delegateSonarToServer(Entity selectedSubmarine) throws IOException {
         try {
             Response<SonarResponse> response = Api.submarineService().sonar(gameId, selectedSubmarine.getId()).execute();
             return response.body();
@@ -94,13 +91,13 @@ public class ClientWorld implements World {
             return new SonarResponse("Timeout", 400);
         }
     }
-    
+
     @Override
-    public SonarResponse extendedSonar(Submarine selectedSubmarine) throws IOException {
+    public SonarResponse extendedSonar(OwnSubmarine selectedSubmarine) throws IOException {
         return delegateExtendedSonarToServer(selectedSubmarine);
     }
 
-    private SonarResponse delegateExtendedSonarToServer(Submarine selectedSubmarine) throws IOException {
+    private SonarResponse delegateExtendedSonarToServer(Entity selectedSubmarine) throws IOException {
         try {
             Response<SonarResponse> response = Api.submarineService().extendSonar(gameId, selectedSubmarine.getId()).execute();
             return response.body();
@@ -108,8 +105,8 @@ public class ClientWorld implements World {
             return new SonarResponse("Timeout", 400);
         }
     }
-        
-    private SimpleResponse delegateShootToServer(ShootRequest shootRequest, Submarine selectedSubmarine) throws IOException {
+
+    private SimpleResponse delegateShootToServer(ShootRequest shootRequest, Entity selectedSubmarine) throws IOException {
         try {
             Response<SimpleResponse> response = Api.submarineService().shoot(gameId, selectedSubmarine.getId(), shootRequest).execute();
             return response.body();

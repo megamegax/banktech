@@ -1,6 +1,7 @@
 package com.banktech.javachallenge.service.domain.logic;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,12 +12,11 @@ import com.banktech.javachallenge.service.Api;
 import com.banktech.javachallenge.service.domain.Position;
 import com.banktech.javachallenge.service.domain.game.MapConfiguration;
 import com.banktech.javachallenge.service.domain.game.SimpleResponse;
-import com.banktech.javachallenge.service.domain.submarine.MoveRequest;
-import com.banktech.javachallenge.service.domain.submarine.OwnSubmarine;
-import com.banktech.javachallenge.service.domain.submarine.SonarResponse;
+import com.banktech.javachallenge.service.domain.submarine.*;
 import com.banktech.javachallenge.view.domain.ApiCall;
 import com.banktech.javachallenge.view.domain.ViewModel;
 import com.banktech.javachallenge.world.World;
+import com.banktech.javachallenge.world.domain.Torpedo;
 
 public class SimpleGameLogic implements GameLogic {
     private ViewModel viewModel;
@@ -41,8 +41,8 @@ public class SimpleGameLogic implements GameLogic {
     public void handleSubmarine(World world, OwnSubmarine submarine) throws IOException {
         double speedChange = maxAcceleration(submarine);
         double angle = avoidCollision(world, submarine);
-        
-        if (submarine.getSonarCooldown() == 0) {        	
+
+        if (submarine.getSonarCooldown() == 0) {
         	world.extendedSonar(submarine);
         }
         SonarResponse sonarResponse = world.sonar(submarine);
@@ -56,12 +56,22 @@ public class SimpleGameLogic implements GameLogic {
     }
 
     private void handleSonarResponse(SonarResponse sonarResponse) {
-		viewModel.setDetectedSubmarines(sonarResponse.getEntities().stream()
-				.filter(submarine -> !submarine.getOwner().getName().equals(Main.ourTeamName())).collect(Collectors.toList()));
-		sonarResponse.getEntities().forEach(submarine -> {
-			if (submarine.getOwner().getName().equals(Main.ourTeamName()))
-				viewModel.getWorldMap().replaceCell(submarine.getPosition(), submarine);
-		});
+        List<Entity> detectedSubmarines = sonarResponse.getEntities().stream()
+                .filter(entity -> !entity.getOwner().getName().equals(Main.ourTeamName()))
+                .filter(entity -> entity.getType().equals(EntityType.Submarine)).collect(Collectors.toList());
+        viewModel.setDetectedSubmarines(detectedSubmarines);
+
+        List<Entity> detectedTorpedos = sonarResponse.getEntities().stream()
+                .filter(entity -> !entity.getOwner().getName().equals(Main.ourTeamName()))
+                .filter(entity -> entity.getType().equals(EntityType.Torpedo)).collect(Collectors.toList());
+
+        viewModel.setDetectedTorpedos(detectedTorpedos);
+
+        sonarResponse.getEntities().stream()
+                .filter(entity -> entity.getOwner().getName().equals(Main.ourTeamName()))
+                .filter(entity -> entity.getType().equals(EntityType.Submarine)).collect(Collectors.toList())
+                .forEach(entity -> viewModel.getWorldMap().replaceCell(entity.getPosition(), entity));
+
     }
 
     private double avoidCollision(World world, OwnSubmarine submarine) {

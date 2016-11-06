@@ -1,8 +1,10 @@
 package com.banktech.javachallenge.world.domain;
 
 import com.banktech.javachallenge.service.domain.Position;
+import com.banktech.javachallenge.service.domain.submarine.Entity;
 
-public class Torpedo {
+
+public class Torpedo extends Entity {
     private Position currentPosition;
     private Position startPosition;
     private Double speed;

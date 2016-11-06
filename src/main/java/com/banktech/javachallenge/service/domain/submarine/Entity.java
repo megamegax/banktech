@@ -4,17 +4,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.banktech.javachallenge.service.domain.Position;
-import com.banktech.javachallenge.view.gui.MapPanel;
+import com.banktech.javachallenge.view.gui.swing.MapPanel;
 
-public class Submarine {
-    protected String type;
+public class Entity {
+    protected EntityType type;
     protected Long id;
     protected Position position;
     protected Owner owner;
     protected Double velocity;
     protected Double angle;
 
-    public Submarine() {
+    public Entity() {
     }
 
     public List<Position> pathInRounds(int rounds) {
@@ -38,11 +38,11 @@ public class Submarine {
                 position.getY() + Math.sin(MapPanel.angleToRadian(newAngle)) * velocity * rounds);
     }
 
-    public String getType() {
+    public EntityType getType() {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(EntityType type) {
         this.type = type;
     }
 
@@ -96,10 +96,10 @@ public class Submarine {
     public boolean equals(Object o) {
         if (this == o)
             return true;
-        if (!(o instanceof Submarine))
+        if (!(o instanceof Entity))
             return false;
 
-        Submarine submarine = (Submarine) o;
+        Entity submarine = (Entity) o;
 
         if (getType() != null ? !getType().equals(submarine.getType()) : submarine.getType() != null)
             return false;

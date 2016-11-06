@@ -2,10 +2,7 @@ package com.banktech.javachallenge.world;
 
 import com.banktech.javachallenge.service.domain.Position;
 import com.banktech.javachallenge.service.domain.game.SimpleResponse;
-import com.banktech.javachallenge.service.domain.submarine.MoveRequest;
-import com.banktech.javachallenge.service.domain.submarine.ShootRequest;
-import com.banktech.javachallenge.service.domain.submarine.SonarResponse;
-import com.banktech.javachallenge.service.domain.submarine.Submarine;
+import com.banktech.javachallenge.service.domain.submarine.*;
 import com.banktech.javachallenge.world.domain.Island;
 import com.banktech.javachallenge.world.domain.Torpedo;
 
@@ -18,7 +15,7 @@ public interface World {
      * Gives back the Cell on the given {@link Position}.
      *
      * @param position {@link Position}
-     * @return {@link Submarine} or {@link Island} or {@link Torpedo} or Null if nothing is there.
+     * @return {@link OwnSubmarine} or {@link Island} or {@link Torpedo} or Null if nothing is there.
      */
     Object cellAt(final Position position);
 
@@ -26,20 +23,20 @@ public interface World {
 
 
     /**
-     * Moves selected {@link Submarine} on the Map.
+     * Moves selected {@link OwnSubmarine} on the Map.
      *
-     * @param submarine   {@link Submarine}
+     * @param submarine   {@link OwnSubmarine}
      * @param moveRequest {@link MoveRequest}
      */
-    SimpleResponse move(final Submarine submarine, final MoveRequest moveRequest) throws IOException;
+    SimpleResponse move(final OwnSubmarine submarine, final MoveRequest moveRequest) throws IOException;
 
     /**
-     * Shoot with selected {@link Submarine}.
+     * Shoot with selected {@link OwnSubmarine}.
      *
-     * @param submarine    {@link Submarine}
+     * @param submarine    {@link OwnSubmarine}
      * @param shootRequest {@link ShootRequest}
      */
-    SimpleResponse shoot(final Submarine submarine, final ShootRequest shootRequest) throws IOException;
+    SimpleResponse shoot(final OwnSubmarine submarine, final ShootRequest shootRequest) throws IOException;
 
     /**
      * Gives back the width and height of the world.
@@ -51,19 +48,19 @@ public interface World {
     /**
      * Sonar.
      *
-     * @param selectedSubmarine {@link Submarine}
+     * @param selectedSubmarine {@link OwnSubmarine}
      * @return {@link SonarResponse}
      * @throws IOException
      */
-    SonarResponse sonar(Submarine selectedSubmarine) throws IOException;
-    
+    SonarResponse sonar(OwnSubmarine selectedSubmarine) throws IOException;
+
     /**
      * Extended sonar.
      *
-     * @param selectedSubmarine {@link Submarine}
+     * @param selectedSubmarine {@link Entity}
      * @return {@link SonarResponse}
      * @throws IOException
      */
-    SonarResponse extendedSonar(Submarine selectedSubmarine) throws IOException;
-    
+    SonarResponse extendedSonar(OwnSubmarine selectedSubmarine) throws IOException;
+
 }

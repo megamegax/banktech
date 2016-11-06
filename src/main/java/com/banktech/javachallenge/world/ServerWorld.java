@@ -3,9 +3,9 @@ package com.banktech.javachallenge.world;
 import com.banktech.javachallenge.service.domain.Position;
 import com.banktech.javachallenge.service.domain.game.SimpleResponse;
 import com.banktech.javachallenge.service.domain.submarine.MoveRequest;
+import com.banktech.javachallenge.service.domain.submarine.OwnSubmarine;
 import com.banktech.javachallenge.service.domain.submarine.ShootRequest;
 import com.banktech.javachallenge.service.domain.submarine.SonarResponse;
-import com.banktech.javachallenge.service.domain.submarine.Submarine;
 import com.banktech.javachallenge.world.domain.Island;
 import com.banktech.javachallenge.world.domain.Torpedo;
 
@@ -27,7 +27,7 @@ public class ServerWorld implements World {
      * Gives back the Cell on the given {@link Position}.
      *
      * @param position {@link Position}
-     * @return {@link Submarine} or {@link Island} or {@link Torpedo} or Null if nothing is there.
+     * @return {@link OwnSubmarine} or {@link Island} or {@link Torpedo} or Null if nothing is there.
      */
     @Override
     public Object cellAt(final Position position) {
@@ -44,14 +44,14 @@ public class ServerWorld implements World {
     }
 
     /**
-     * Moves selected {@link Submarine} on the Map.
+     * Moves selected {@link OwnSubmarine} on the Map.
      *
-     * @param submarine   {@link Submarine}
+     * @param submarine   {@link OwnSubmarine}
      * @param moveRequest {@link MoveRequest}
      */
     @Override
-    public SimpleResponse move(final Submarine submarine, final MoveRequest moveRequest) {
-        Submarine selectedSubmarine = (Submarine) cellAt(submarine.getPosition());
+    public SimpleResponse move(final OwnSubmarine submarine, final MoveRequest moveRequest) {
+        OwnSubmarine selectedSubmarine = (OwnSubmarine) cellAt(submarine.getPosition());
         map.remove(submarine);
         Position newPosition = calculateMovement(selectedSubmarine, moveRequest);
         selectedSubmarine.setPosition(newPosition);
@@ -60,24 +60,24 @@ public class ServerWorld implements World {
     }
 
     /**
-     * Shoot with selected {@link Submarine}.
+     * Shoot with selected {@link OwnSubmarine}.
      *
-     * @param submarine    {@link Submarine}
+     * @param submarine    {@link OwnSubmarine}
      * @param shootRequest {@link ShootRequest}
      */
     @Override
-    public SimpleResponse shoot(Submarine submarine, ShootRequest shootRequest) {
+    public SimpleResponse shoot(OwnSubmarine submarine, ShootRequest shootRequest) {
         return new SimpleResponse();
     }
 
     /**
-     * Calculates the new position of the {@link Submarine}.
+     * Calculates the new position of the {@link OwnSubmarine}.
      *
-     * @param submarine   {@link Submarine}
+     * @param submarine   {@link OwnSubmarine}
      * @param moveRequest {@link MoveRequest}
-     * @return new {@link Position} of {@link Submarine}
+     * @return new {@link Position} of {@link OwnSubmarine}
      */
-    private Position calculateMovement(final Submarine submarine, MoveRequest moveRequest) {
+    private Position calculateMovement(final OwnSubmarine submarine, MoveRequest moveRequest) {
         return submarine.getPosition();
     }
 
@@ -86,12 +86,12 @@ public class ServerWorld implements World {
     }
 
     @Override
-    public SonarResponse sonar(Submarine selectedSubmarine) throws IOException {
+    public SonarResponse sonar(OwnSubmarine selectedSubmarine) throws IOException {
         throw new UnsupportedOperationException();
     }
     
     @Override
-    public SonarResponse extendedSonar(Submarine selectedSubmarine) throws IOException {
+    public SonarResponse extendedSonar(OwnSubmarine selectedSubmarine) throws IOException {
         throw new UnsupportedOperationException();
     }
     

@@ -5,7 +5,7 @@ import com.banktech.javachallenge.service.domain.game.SimpleResponse;
 import java.util.List;
 
 public class SonarResponse extends SimpleResponse {
-    private List<Submarine> entities;
+    private List<Entity> entities;
 
     public SonarResponse() {
     }
@@ -14,11 +14,11 @@ public class SonarResponse extends SimpleResponse {
         super(message, code);
     }
 
-    public List<Submarine> getEntities() {
+    public List<Entity> getEntities() {
         return entities;
     }
 
-    public void setEntities(List<Submarine> entities) {
+    public void setEntities(List<Entity> entities) {
         this.entities = entities;
     }
 }
