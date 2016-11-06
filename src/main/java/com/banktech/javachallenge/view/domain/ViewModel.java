@@ -9,7 +9,6 @@ import com.banktech.javachallenge.world.domain.Torpedo;
 import java.util.ArrayList;
 import java.util.List;
 
-
 public class ViewModel {
     private Game game;
     private List<ApiCall> calls;
@@ -25,7 +24,8 @@ public class ViewModel {
         shootedTorpedos = new ArrayList<>();
     }
 
-    public ViewModel(Game game, List<ApiCall> calls, List<OwnSubmarine> ownSubmarines, List<Submarine> detectedSubmarines, List<Torpedo> shootedTorpedos, World worldMap) {
+    public ViewModel(Game game, List<ApiCall> calls, List<OwnSubmarine> ownSubmarines, List<Submarine> detectedSubmarines,
+            List<Torpedo> shootedTorpedos, World worldMap) {
         this.game = game;
         this.calls = calls;
         this.ownSubmarines = ownSubmarines;
@@ -77,4 +77,9 @@ public class ViewModel {
     public synchronized ViewModel cloneToNewTurn() {
         return new ViewModel(game, new ArrayList<>(), ownSubmarines, detectedSubmarines, shootedTorpedos, worldMap);
     }
+
+    public synchronized List<Torpedo> getShootedTorpedos() {
+        return shootedTorpedos;
+    }
+
 }

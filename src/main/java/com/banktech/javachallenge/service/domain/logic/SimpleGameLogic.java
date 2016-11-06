@@ -39,7 +39,6 @@ public class SimpleGameLogic implements GameLogic {
     }
 
     public void handleSubmarine(World world, OwnSubmarine submarine) throws IOException {
-        System.out.println(submarine);
         double speedChange = maxAcceleration(submarine);
         double angle = avoidCollision(world, submarine);
         SonarResponse sonarResponse = world.sonar(submarine);
@@ -53,7 +52,8 @@ public class SimpleGameLogic implements GameLogic {
     }
 
     private void handleSonarResponse(SonarResponse sonarResponse) {
-        viewModel.setDetectedSubmarines(sonarResponse.getEntities().stream().filter(submarine -> !submarine.getOwner().getName().equals(Main.ourTeamName())).collect(Collectors.toList()));
+        viewModel.setDetectedSubmarines(sonarResponse.getEntities().stream()
+                .filter(submarine -> !submarine.getOwner().getName().equals(Main.ourTeamName())).collect(Collectors.toList()));
         sonarResponse.getEntities().forEach(submarine -> {
             if (submarine.getOwner().getName().equals(Main.ourTeamName()))
                 viewModel.getWorldMap().replaceCell(submarine.getPosition(), submarine);
@@ -72,18 +72,24 @@ public class SimpleGameLogic implements GameLogic {
         setDesiredAngle(submarine, newAngle);
         double change = newAngle - submarine.getAngle();
         if (Math.abs(change) > 1) {
-            if (change > 180) {
-                change -= 360;
-            } else if (change < -180) {
-                change += 360;
-            }
-            if (change > 0) {
-                return Math.min(change, mapConfiguration.getMaxSteeringPerRound());
-            } else {
-                return Math.max(change, -mapConfiguration.getMaxSteeringPerRound());
-            }
+            return adjustAngle(change);
         }
         return 0;
+    }
+
+    private double adjustAngle(double change) {
+        double result;
+        if (change > 180) {
+            change -= 360;
+        } else if (change < -180) {
+            change += 360;
+        }
+        if (change > 0) {
+            result = Math.min(change, mapConfiguration.getMaxSteeringPerRound());
+        } else {
+            result = Math.max(change, -mapConfiguration.getMaxSteeringPerRound());
+        }
+        return result;
     }
 
     private void setDesiredAngle(OwnSubmarine submarine, double angle) {

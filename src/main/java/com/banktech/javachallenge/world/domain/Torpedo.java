@@ -2,7 +2,6 @@ package com.banktech.javachallenge.world.domain;
 
 import com.banktech.javachallenge.service.domain.Position;
 
-
 public class Torpedo {
     private Position currentPosition;
     private Position startPosition;
@@ -27,4 +26,21 @@ public class Torpedo {
     public void setCurrentPosition(Position currentPosition) {
         this.currentPosition = currentPosition;
     }
+
+    public Double getSpeed() {
+        return speed;
+    }
+
+    public void setSpeed(Double speed) {
+        this.speed = speed;
+    }
+
+    public Double getAngle() {
+        return angle;
+    }
+
+    public void setAngle(Double angle) {
+        this.angle = angle;
+    }
+
 }

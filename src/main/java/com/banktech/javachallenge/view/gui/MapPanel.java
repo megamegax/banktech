@@ -11,6 +11,7 @@ import com.banktech.javachallenge.service.domain.Position;
 import com.banktech.javachallenge.service.domain.submarine.OwnSubmarine;
 import com.banktech.javachallenge.service.domain.submarine.Submarine;
 import com.banktech.javachallenge.view.domain.ViewModel;
+import com.banktech.javachallenge.world.domain.Torpedo;
 
 public class MapPanel extends JPanel {
 
@@ -36,12 +37,12 @@ public class MapPanel extends JPanel {
         if (viewModel != null && viewModel.getGame() != null) {
             List<Position> islands = viewModel.getGame().getMapConfiguration().getIslandPositions();
             for (Position island : islands) {
-                drawCircle(g, island, viewModel.getGame().getMapConfiguration().getIslandSize());
+                drawFillCircle(g, island, viewModel.getGame().getMapConfiguration().getIslandSize());
             }
             g.setColor(Color.BLUE);
             List<OwnSubmarine> ownSubmarines = viewModel.getOwnSubmarines();
             for (OwnSubmarine submarine : ownSubmarines) {
-                drawCircle(g, submarine.getPosition(), viewModel.getGame().getMapConfiguration().getSubmarineSize());
+                drawFillCircle(g, submarine.getPosition(), viewModel.getGame().getMapConfiguration().getSubmarineSize());
             }
             g.setColor(Color.BLACK);
             for (OwnSubmarine submarine : ownSubmarines) {
@@ -50,11 +51,18 @@ public class MapPanel extends JPanel {
             g.setColor(Color.RED);
             List<Submarine> enemySubmarines = viewModel.getDetectedSubmarines();
             for (Submarine submarine : enemySubmarines) {
-                drawCircle(g, submarine.getPosition(), viewModel.getGame().getMapConfiguration().getSubmarineSize());
+                drawFillCircle(g, submarine.getPosition(), viewModel.getGame().getMapConfiguration().getSubmarineSize());
             }
             g.setColor(Color.BLACK);
             for (Submarine submarine : enemySubmarines) {
                 drawSpeed(g, submarine.getPosition(), submarine.getAngle(), submarine.getVelocity());
+            }
+            g.setColor(Color.BLACK);
+            List<Torpedo> torpedos = viewModel.getShootedTorpedos();
+            for (Torpedo torpedo : torpedos) {
+                drawFillCircle(g, torpedo.getCurrentPosition(), 2);
+                drawCircle(g, torpedo.getCurrentPosition(), viewModel.getGame().getMapConfiguration().getTorpedoRange());
+                drawSpeed(g, torpedo.getCurrentPosition(), torpedo.getAngle(), torpedo.getSpeed());
             }
         }
     }
@@ -69,8 +77,12 @@ public class MapPanel extends JPanel {
         return angle / 180 * Math.PI;
     }
     
-    private void drawCircle(Graphics g, Position position, int radius) {
+    private void drawFillCircle(Graphics g, Position position, int radius) {
         g.fillOval(scale(position.getX() - radius), scale(position.getY() - radius), scale(radius * 2), scale(radius * 2));
+    }
+
+    private void drawCircle(Graphics g, Position position, int radius) {
+        g.drawOval(scale(position.getX() - radius), scale(position.getY() - radius), scale(radius * 2), scale(radius * 2));
     }
 
     private int scale(double number) {
