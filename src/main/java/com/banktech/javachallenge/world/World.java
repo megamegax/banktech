@@ -56,4 +56,14 @@ public interface World {
      * @throws IOException
      */
     SonarResponse sonar(Submarine selectedSubmarine) throws IOException;
+    
+    /**
+     * Extended sonar.
+     *
+     * @param selectedSubmarine {@link Submarine}
+     * @return {@link SonarResponse}
+     * @throws IOException
+     */
+    SonarResponse extendedSonar(Submarine selectedSubmarine) throws IOException;
+    
 }

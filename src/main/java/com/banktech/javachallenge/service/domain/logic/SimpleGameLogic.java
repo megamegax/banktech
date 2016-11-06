@@ -41,6 +41,10 @@ public class SimpleGameLogic implements GameLogic {
     public void handleSubmarine(World world, OwnSubmarine submarine) throws IOException {
         double speedChange = maxAcceleration(submarine);
         double angle = avoidCollision(world, submarine);
+        
+        if (submarine.getSonarCooldown() == 0) {        	
+        	world.extendedSonar(submarine);
+        }
         SonarResponse sonarResponse = world.sonar(submarine);
         handleSonarResponse(sonarResponse);
         move(world, submarine, speedChange, angle);
@@ -52,12 +56,12 @@ public class SimpleGameLogic implements GameLogic {
     }
 
     private void handleSonarResponse(SonarResponse sonarResponse) {
-        viewModel.setDetectedSubmarines(sonarResponse.getEntities().stream()
-                .filter(submarine -> !submarine.getOwner().getName().equals(Main.ourTeamName())).collect(Collectors.toList()));
-        sonarResponse.getEntities().forEach(submarine -> {
-            if (submarine.getOwner().getName().equals(Main.ourTeamName()))
-                viewModel.getWorldMap().replaceCell(submarine.getPosition(), submarine);
-        });
+		viewModel.setDetectedSubmarines(sonarResponse.getEntities().stream()
+				.filter(submarine -> !submarine.getOwner().getName().equals(Main.ourTeamName())).collect(Collectors.toList()));
+		sonarResponse.getEntities().forEach(submarine -> {
+			if (submarine.getOwner().getName().equals(Main.ourTeamName()))
+				viewModel.getWorldMap().replaceCell(submarine.getPosition(), submarine);
+		});
     }
 
     private double avoidCollision(World world, OwnSubmarine submarine) {

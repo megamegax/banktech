@@ -94,7 +94,21 @@ public class ClientWorld implements World {
             return new SonarResponse("Timeout", 400);
         }
     }
+    
+    @Override
+    public SonarResponse extendedSonar(Submarine selectedSubmarine) throws IOException {
+        return delegateExtendedSonarToServer(selectedSubmarine);
+    }
 
+    private SonarResponse delegateExtendedSonarToServer(Submarine selectedSubmarine) throws IOException {
+        try {
+            Response<SonarResponse> response = Api.submarineService().extendSonar(gameId, selectedSubmarine.getId()).execute();
+            return response.body();
+        } catch (NullPointerException e) {
+            return new SonarResponse("Timeout", 400);
+        }
+    }
+        
     private SimpleResponse delegateShootToServer(ShootRequest shootRequest, Submarine selectedSubmarine) throws IOException {
         try {
             Response<SimpleResponse> response = Api.submarineService().shoot(gameId, selectedSubmarine.getId(), shootRequest).execute();

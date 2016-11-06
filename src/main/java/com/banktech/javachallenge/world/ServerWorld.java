@@ -89,4 +89,10 @@ public class ServerWorld implements World {
     public SonarResponse sonar(Submarine selectedSubmarine) throws IOException {
         throw new UnsupportedOperationException();
     }
+    
+    @Override
+    public SonarResponse extendedSonar(Submarine selectedSubmarine) throws IOException {
+        throw new UnsupportedOperationException();
+    }
+    
 }
