@@ -1,4 +1,4 @@
-package com.banktech.javachallenge.world;
+package com.banktech.javachallenge.service.world;
 
 import com.banktech.javachallenge.service.domain.Position;
 import com.banktech.javachallenge.service.domain.game.SimpleResponse;
@@ -6,8 +6,8 @@ import com.banktech.javachallenge.service.domain.submarine.MoveRequest;
 import com.banktech.javachallenge.service.domain.submarine.OwnSubmarine;
 import com.banktech.javachallenge.service.domain.submarine.ShootRequest;
 import com.banktech.javachallenge.service.domain.submarine.SonarResponse;
-import com.banktech.javachallenge.world.domain.Island;
-import com.banktech.javachallenge.world.domain.Torpedo;
+import com.banktech.javachallenge.service.domain.Island;
+import com.banktech.javachallenge.service.domain.Torpedo;
 
 import java.io.IOException;
 import java.util.HashMap;

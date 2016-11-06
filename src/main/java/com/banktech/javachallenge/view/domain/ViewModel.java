@@ -3,8 +3,8 @@ package com.banktech.javachallenge.view.domain;
 import com.banktech.javachallenge.service.domain.game.Game;
 import com.banktech.javachallenge.service.domain.submarine.Entity;
 import com.banktech.javachallenge.service.domain.submarine.OwnSubmarine;
-import com.banktech.javachallenge.world.World;
-import com.banktech.javachallenge.world.domain.Torpedo;
+import com.banktech.javachallenge.service.world.World;
+import com.banktech.javachallenge.service.domain.Torpedo;
 
 import java.util.ArrayList;
 import java.util.List;

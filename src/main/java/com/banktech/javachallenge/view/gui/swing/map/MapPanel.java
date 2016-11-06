@@ -12,7 +12,7 @@ import com.banktech.javachallenge.service.domain.submarine.Entity;
 import com.banktech.javachallenge.service.domain.submarine.OwnSubmarine;
 import com.banktech.javachallenge.view.domain.ViewModel;
 import com.banktech.javachallenge.view.gui.MapUtil;
-import com.banktech.javachallenge.world.domain.Torpedo;
+import com.banktech.javachallenge.service.domain.Torpedo;
 
 public class MapPanel extends JPanel {
 

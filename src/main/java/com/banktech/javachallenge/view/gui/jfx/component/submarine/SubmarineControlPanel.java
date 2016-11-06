@@ -1,7 +1,7 @@
 package com.banktech.javachallenge.view.gui.jfx.component.submarine;
 
 import com.banktech.javachallenge.service.domain.submarine.OwnSubmarine;
-import com.banktech.javachallenge.world.World;
+import com.banktech.javachallenge.service.world.World;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;

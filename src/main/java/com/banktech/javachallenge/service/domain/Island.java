@@ -1,4 +1,4 @@
-package com.banktech.javachallenge.world.domain;
+package com.banktech.javachallenge.service.domain;
 
 import com.banktech.javachallenge.service.domain.Position;
 

@@ -1,10 +1,10 @@
-package com.banktech.javachallenge.world;
+package com.banktech.javachallenge.service.world;
 
 import com.banktech.javachallenge.service.domain.Position;
 import com.banktech.javachallenge.service.domain.game.SimpleResponse;
 import com.banktech.javachallenge.service.domain.submarine.*;
-import com.banktech.javachallenge.world.domain.Island;
-import com.banktech.javachallenge.world.domain.Torpedo;
+import com.banktech.javachallenge.service.domain.Island;
+import com.banktech.javachallenge.service.domain.Torpedo;
 
 import java.io.IOException;
 
