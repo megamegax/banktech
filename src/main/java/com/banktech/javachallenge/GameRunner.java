@@ -1,29 +1,23 @@
 package com.banktech.javachallenge;
 
+import com.banktech.javachallenge.logic.GameLogic;
+import com.banktech.javachallenge.logic.SimpleGameLogic;
+import com.banktech.javachallenge.service.Api;
+import com.banktech.javachallenge.service.domain.game.*;
+import com.banktech.javachallenge.service.domain.submarine.OwnSubmarine;
+import com.banktech.javachallenge.service.domain.submarine.SubmarineResponse;
+import com.banktech.javachallenge.service.world.ClientWorld;
+import com.banktech.javachallenge.view.GUIListener;
+import com.banktech.javachallenge.view.domain.ApiCall;
+import com.banktech.javachallenge.view.domain.ViewModel;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
-
-import com.banktech.javachallenge.service.Api;
-import com.banktech.javachallenge.service.domain.game.CreateGameResponse;
-import com.banktech.javachallenge.service.domain.game.Game;
-import com.banktech.javachallenge.service.domain.game.GameInfoResponse;
-import com.banktech.javachallenge.service.domain.game.GameResponse;
-import com.banktech.javachallenge.service.domain.game.SimpleResponse;
-import com.banktech.javachallenge.service.domain.game.Status;
-import com.banktech.javachallenge.logic.GameLogic;
-import com.banktech.javachallenge.logic.SimpleGameLogic;
-import com.banktech.javachallenge.service.domain.submarine.OwnSubmarine;
-import com.banktech.javachallenge.service.domain.submarine.SubmarineResponse;
-import com.banktech.javachallenge.view.domain.ApiCall;
-import com.banktech.javachallenge.view.GUIListener;
-import com.banktech.javachallenge.view.domain.ViewModel;
-import com.banktech.javachallenge.service.world.ClientWorld;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class GameRunner {
     private List<ViewModel> turns = new ArrayList<>();
@@ -113,7 +107,6 @@ public class GameRunner {
     }
 
     private void refreshCallHistory(ApiCall apiCall) {
-        System.out.println(apiCall);
         getCurrentViewModel().getCalls().add(apiCall);
         listener.refresh(turns);
     }
@@ -168,8 +161,8 @@ public class GameRunner {
 
     public void printLogs() {
         System.out.println("------Turn: " + (getCurrentRound() + 1) + "------");
-        List<ApiCall> calls = getCurrentViewModel().getCalls();
-        calls.forEach(System.out::println);
+      /*  List<ApiCall> calls = getCurrentViewModel().getCalls();
+        calls.forEach(System.out::println);*/
     }
 
     void play() {
