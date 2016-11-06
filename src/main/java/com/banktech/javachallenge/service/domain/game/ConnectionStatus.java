@@ -17,4 +17,11 @@ public class ConnectionStatus {
     public void setConnected(Map<String, Boolean> connected) {
         this.connected = connected;
     }
+
+    @Override
+    public String toString() {
+        return "ConnectionStatus{" +
+                "connected=" + connected +
+                '}';
+    }
 }

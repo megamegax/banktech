@@ -2,12 +2,14 @@ package com.banktech.javachallenge.service.domain.submarine;
 
 import com.banktech.javachallenge.service.domain.game.SimpleResponse;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class SonarResponse extends SimpleResponse {
     private List<Entity> entities;
 
     public SonarResponse() {
+        entities = new ArrayList<>();
     }
 
     public SonarResponse(String message, Integer code) {
@@ -19,6 +21,10 @@ public class SonarResponse extends SimpleResponse {
     }
 
     public void setEntities(List<Entity> entities) {
-        this.entities = entities;
+        if (entities != null) {
+            this.entities = entities;
+            System.out.println("SONARRESPONSE ENTITY NULL!!!!!!!");
+        }
+
     }
 }

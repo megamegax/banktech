@@ -15,4 +15,11 @@ public class Scores {
     public void setScores(Map<String, Integer> scores) {
         this.scores = scores;
     }
+
+    @Override
+    public String toString() {
+        return "Scores{" +
+                "scores=" + scores +
+                '}';
+    }
 }
