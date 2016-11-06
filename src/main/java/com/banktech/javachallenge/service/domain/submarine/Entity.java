@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.banktech.javachallenge.service.domain.Position;
-import com.banktech.javachallenge.view.gui.swing.MapPanel;
+import com.banktech.javachallenge.view.gui.MapUtil;
 
 public class Entity {
     protected EntityType type;
@@ -34,8 +34,8 @@ public class Entity {
     }
 
     public Position locationInRounds(double rounds, double newAngle) {
-        return new Position(position.getX() + Math.cos(MapPanel.angleToRadian(newAngle)) * velocity * rounds,
-                position.getY() + Math.sin(MapPanel.angleToRadian(newAngle)) * velocity * rounds);
+        return new Position(position.getX() + Math.cos(MapUtil.angleToRadian(newAngle)) * velocity * rounds,
+                position.getY() + Math.sin(MapUtil.angleToRadian(newAngle)) * velocity * rounds);
     }
 
     public EntityType getType() {

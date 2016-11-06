@@ -2,6 +2,7 @@ package com.banktech.javachallenge.view.gui.swing;
 
 import com.banktech.javachallenge.view.GUIListener;
 import com.banktech.javachallenge.view.domain.ViewModel;
+import com.banktech.javachallenge.view.gui.swing.map.MapPanel;
 
 import java.awt.BorderLayout;
 import java.util.List;

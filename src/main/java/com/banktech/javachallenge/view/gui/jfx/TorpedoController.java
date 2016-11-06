@@ -5,7 +5,7 @@ import com.banktech.javachallenge.view.GUIListener;
 import com.banktech.javachallenge.view.domain.ApiCall;
 import com.banktech.javachallenge.view.domain.ViewModel;
 
-import com.banktech.javachallenge.view.gui.jfx.component.MapCanvas;
+import com.banktech.javachallenge.view.gui.jfx.component.map.MapCanvas;
 import com.banktech.javachallenge.view.gui.jfx.component.submarine.SubmarineControlPanel;
 import com.jfoenix.controls.JFXListView;
 import com.jfoenix.controls.JFXToggleButton;
