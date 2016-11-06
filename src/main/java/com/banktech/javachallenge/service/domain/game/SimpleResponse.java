@@ -6,6 +6,8 @@ public class SimpleResponse {
     protected Integer code;
 
     public SimpleResponse() {
+        this.message = "";
+        this.code = 0;
     }
 
     public SimpleResponse(String message, int code) {

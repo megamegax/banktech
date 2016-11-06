@@ -200,6 +200,7 @@ public class GameRunner {
                 }
             }
             System.out.println("Játék vége!");
+            turns.get(turns.size() - 1).getCalls().add(new ApiCall("End of Game", "-", new SimpleResponse()));
         });
 
     }
