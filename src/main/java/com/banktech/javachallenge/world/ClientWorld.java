@@ -3,6 +3,7 @@ package com.banktech.javachallenge.world;
 import com.banktech.javachallenge.service.Api;
 import com.banktech.javachallenge.service.domain.Position;
 import com.banktech.javachallenge.service.domain.game.Game;
+import com.banktech.javachallenge.service.domain.game.SimpleResponse;
 import com.banktech.javachallenge.service.domain.submarine.MoveRequest;
 import com.banktech.javachallenge.service.domain.submarine.ShootRequest;
 import com.banktech.javachallenge.service.domain.submarine.SonarResponse;
@@ -54,14 +55,19 @@ public class ClientWorld implements World {
      * @param moveRequest       {@link MoveRequest}
      */
     @Override
-    public void move(final Submarine selectedSubmarine, final MoveRequest moveRequest) throws IOException {
+    public SimpleResponse move(final Submarine selectedSubmarine, final MoveRequest moveRequest) throws IOException {
         //noinspection SuspiciousMethodCalls
         map.remove(selectedSubmarine);
-        delegateMovementToServer(moveRequest, selectedSubmarine);
+        return delegateMovementToServer(moveRequest, selectedSubmarine);
     }
 
-    private void delegateMovementToServer(MoveRequest moveRequest, final Submarine selectedSubmarine) throws IOException {
-        Api.submarineService().move(gameId, selectedSubmarine.getId(), moveRequest).execute();
+    private SimpleResponse delegateMovementToServer(MoveRequest moveRequest, final Submarine selectedSubmarine) throws IOException {
+        try {
+            Response<SimpleResponse> response = Api.submarineService().move(gameId, selectedSubmarine.getId(), moveRequest).execute();
+            return response.body();
+        } catch (NullPointerException e) {
+            return new SonarResponse("Timeout", 400);
+        }
     }
 
     /**
@@ -71,18 +77,31 @@ public class ClientWorld implements World {
      * @param shootRequest      {@link ShootRequest}
      */
     @Override
-    public void shoot(Submarine selectedSubmarine, ShootRequest shootRequest) throws IOException {
-        delegateShootToServer(shootRequest, selectedSubmarine);
+    public SimpleResponse shoot(Submarine selectedSubmarine, ShootRequest shootRequest) throws IOException {
+        return delegateShootToServer(shootRequest, selectedSubmarine);
     }
-    
+
     @Override
     public SonarResponse sonar(Submarine selectedSubmarine) throws IOException {
-        Response<SonarResponse> response = Api.submarineService().sonar(gameId, selectedSubmarine.getId()).execute();
-        return response.body();
+        return delegateSonarToServer(selectedSubmarine);
     }
-    
-    private void delegateShootToServer(ShootRequest shootRequest, Submarine selectedSubmarine) throws IOException {
-        Api.submarineService().shoot(gameId, selectedSubmarine.getId(), shootRequest).execute();
+
+    private SonarResponse delegateSonarToServer(Submarine selectedSubmarine) throws IOException {
+        try {
+            Response<SonarResponse> response = Api.submarineService().sonar(gameId, selectedSubmarine.getId()).execute();
+            return response.body();
+        } catch (NullPointerException e) {
+            return new SonarResponse("Timeout", 400);
+        }
+    }
+
+    private SimpleResponse delegateShootToServer(ShootRequest shootRequest, Submarine selectedSubmarine) throws IOException {
+        try {
+            Response<SimpleResponse> response = Api.submarineService().shoot(gameId, selectedSubmarine.getId(), shootRequest).execute();
+            return response.body();
+        } catch (NullPointerException e) {
+            return new SimpleResponse("Timeout", 400);
+        }
     }
 
     public Position size() {

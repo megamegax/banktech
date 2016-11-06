@@ -10,6 +10,10 @@ public class SonarResponse extends SimpleResponse {
     public SonarResponse() {
     }
 
+    public SonarResponse(String message, Integer code) {
+        super(message, code);
+    }
+
     public List<Submarine> getEntities() {
         return entities;
     }

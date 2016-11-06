@@ -7,11 +7,14 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import com.banktech.javachallenge.Main;
+import com.banktech.javachallenge.service.Api;
 import com.banktech.javachallenge.service.domain.Position;
 import com.banktech.javachallenge.service.domain.game.MapConfiguration;
+import com.banktech.javachallenge.service.domain.game.SimpleResponse;
 import com.banktech.javachallenge.service.domain.submarine.MoveRequest;
 import com.banktech.javachallenge.service.domain.submarine.OwnSubmarine;
 import com.banktech.javachallenge.service.domain.submarine.SonarResponse;
+import com.banktech.javachallenge.view.domain.ApiCall;
 import com.banktech.javachallenge.view.domain.ViewModel;
 import com.banktech.javachallenge.world.World;
 
@@ -41,7 +44,12 @@ public class SimpleGameLogic implements GameLogic {
         double angle = avoidCollision(world, submarine);
         SonarResponse sonarResponse = world.sonar(submarine);
         handleSonarResponse(sonarResponse);
-        world.move(submarine, new MoveRequest((double) speedChange, angle));
+        move(world, submarine, speedChange, angle);
+    }
+
+    private void move(World world, OwnSubmarine submarine, double speedChange, double angle) throws IOException {
+        SimpleResponse response = world.move(submarine, new MoveRequest(speedChange, angle));
+        viewModel.getCalls().add(new ApiCall(Api.MOVE, submarine.getId(), response));
     }
 
     private void handleSonarResponse(SonarResponse sonarResponse) {

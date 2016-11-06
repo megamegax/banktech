@@ -1,6 +1,7 @@
 package com.banktech.javachallenge.world;
 
 import com.banktech.javachallenge.service.domain.Position;
+import com.banktech.javachallenge.service.domain.game.SimpleResponse;
 import com.banktech.javachallenge.service.domain.submarine.MoveRequest;
 import com.banktech.javachallenge.service.domain.submarine.ShootRequest;
 import com.banktech.javachallenge.service.domain.submarine.SonarResponse;
@@ -30,7 +31,7 @@ public interface World {
      * @param submarine   {@link Submarine}
      * @param moveRequest {@link MoveRequest}
      */
-    void move(final Submarine submarine, final MoveRequest moveRequest) throws IOException;
+    SimpleResponse move(final Submarine submarine, final MoveRequest moveRequest) throws IOException;
 
     /**
      * Shoot with selected {@link Submarine}.
@@ -38,7 +39,7 @@ public interface World {
      * @param submarine    {@link Submarine}
      * @param shootRequest {@link ShootRequest}
      */
-    void shoot(final Submarine submarine, final ShootRequest shootRequest) throws IOException;
+    SimpleResponse shoot(final Submarine submarine, final ShootRequest shootRequest) throws IOException;
 
     /**
      * Gives back the width and height of the world.

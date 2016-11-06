@@ -40,8 +40,7 @@ public class GameRunner {
 
     void listGames(Consumer<GameResponse> consumer) {
         Call<GameResponse> gameResponseCall = Api.gameService().listGames();
-        String method = gameResponseCall.request().method();
-        String url = gameResponseCall.request().url().url().toString();
+
         gameResponseCall.enqueue(new Callback<GameResponse>() {
             @Override
             public void onResponse(Call<GameResponse> call, Response<GameResponse> response) {
@@ -50,7 +49,7 @@ public class GameRunner {
                     if (response.body() != null) {
                         GameResponse gameResponse = response.body();
                         SimpleResponse simpleResponse = new SimpleResponse(gameResponse.getMessage(), gameResponse.getCode());
-                        ApiCall apiCall = new ApiCall(method, url, simpleResponse);
+                        ApiCall apiCall = new ApiCall(Api.LIST_GAMES, "-", simpleResponse);
                         refreshCallHistory(apiCall);
 
                         consumer.accept(gameResponse);
@@ -95,9 +94,6 @@ public class GameRunner {
     }
 
     CreateGameResponse startGame() {
-        String method = Api.gameService().createGame().request().method();
-        String url = Api.gameService().createGame().request().url().url().toString();
-
         Response<CreateGameResponse> response = null;
         try {
             response = Api.gameService().createGame().execute();
@@ -109,7 +105,7 @@ public class GameRunner {
         if (response.body() != null) {
             CreateGameResponse createGameResponse = response.body();
             SimpleResponse simpleResponse = new SimpleResponse(createGameResponse.getMessage(), createGameResponse.getCode());
-            ApiCall apiCall = new ApiCall(method, url, simpleResponse);
+            ApiCall apiCall = new ApiCall(Api.START_GAME, gameId, simpleResponse);
             refreshCallHistory(apiCall);
             return createGameResponse;
         }
@@ -127,9 +123,6 @@ public class GameRunner {
     }
 
     void joinGame(Long gameId) {
-        String method = Api.gameService().joinGame(gameId).request().method();
-        String url = Api.gameService().joinGame(gameId).request().url().url().toString();
-
         Response<SimpleResponse> response = null;
         try {
             response = Api.gameService().joinGame(gameId).execute();
@@ -140,7 +133,7 @@ public class GameRunner {
         this.gameId = gameId;
         if (response.body() != null) {
             SimpleResponse simpleResponse = response.body();
-            ApiCall apiCall = new ApiCall(method, url, simpleResponse);
+            ApiCall apiCall = new ApiCall(Api.JOIN_GAME, gameId, simpleResponse);
             refreshCallHistory(apiCall);
             loadGameInfo(gameId, game -> refreshGui());
 
@@ -148,8 +141,6 @@ public class GameRunner {
     }
 
     private void loadGameInfo(Long gameId, Consumer<Game> consumer) {
-        String method = Api.gameService().gameInfo(gameId).request().method();
-        String url = Api.gameService().gameInfo(gameId).request().url().url().toString();
         Api.gameService().gameInfo(gameId).enqueue(new Callback<GameInfoResponse>() {
             @Override
             public void onResponse(Call<GameInfoResponse> call, Response<GameInfoResponse> response) {
@@ -159,7 +150,7 @@ public class GameRunner {
                         GameInfoResponse gameInfo = response.body();
                         getCurrentViewModel().setGame(gameInfo.getGame());
                         SimpleResponse simpleResponse = new SimpleResponse(gameInfo.getMessage(), gameInfo.getCode());
-                        ApiCall apiCall = new ApiCall(method, url, simpleResponse);
+                        ApiCall apiCall = new ApiCall(Api.LOAD_GAME_INFO, gameId, simpleResponse);
                         refreshCallHistory(apiCall);
                         consumer.accept(gameInfo.getGame());
                         getCurrentViewModel().setWorldMap(new ClientWorld(gameInfo.getGame()));
@@ -178,7 +169,7 @@ public class GameRunner {
     public void printLogs() {
         System.out.println("------Turn: " + (getCurrentRound() + 1) + "------");
         List<ApiCall> calls = getCurrentViewModel().getCalls();
-        calls.forEach(apiCall -> System.out.println(apiCall.getMethod() + ":" + apiCall.getUrl() + " -> " + apiCall.getResponse()));
+        calls.forEach(System.out::println);
     }
 
     void play() {
@@ -221,8 +212,6 @@ public class GameRunner {
     }
 
     private void loadOwnSubmarines() throws IOException {
-        String method = Api.gameService().gameInfo(gameId).request().method();
-        String url = Api.gameService().gameInfo(gameId).request().url().url().toString();
         Response<SubmarineResponse> response = null;
         try {
             response = Api.submarineService().listSubmarines(gameId).execute();
@@ -235,11 +224,11 @@ public class GameRunner {
             if (response.body() != null) {
                 List<OwnSubmarine> submarines = response.body().getSubmarines();
                 SimpleResponse simpleResponse = new SimpleResponse(response.body().getMessage(), response.body().getCode());
-                ApiCall apiCall = new ApiCall(method, url, simpleResponse);
+                ApiCall apiCall = new ApiCall(Api.LOAD_OWN_SUBMARINES, gameId, simpleResponse);
                 refreshCallHistory(apiCall);
-                submarines.forEach(ownSubmarine -> {
-                    getCurrentViewModel().getWorldMap().replaceCell(ownSubmarine.getPosition(), ownSubmarine);
-                });
+                submarines.forEach(ownSubmarine ->
+                        getCurrentViewModel().getWorldMap().replaceCell(ownSubmarine.getPosition(), ownSubmarine)
+                );
                 getCurrentViewModel().setOwnSubmarines(submarines);
             }
         }

@@ -13,6 +13,15 @@ import retrofit2.converter.gson.GsonConverterFactory;
  *
  */
 public class Api {
+    public static final String MOVE = "moveSubmarine";
+    public static final String SONAR = "sonarSubmarine";
+    public static final String SHOOT = "shootSubmarine";
+    public static final String LIST_GAMES = "listGames";
+    public static final String JOIN_GAME = "joinGame";
+    public static final String START_GAME = "startGame";
+    public static final String LOAD_GAME_INFO = "loadGameInfo";
+    public static final String LOAD_OWN_SUBMARINES = "loadOwnSubmarines";
+
     private static String baseUrl = "195.228.45.100";
     private static Integer port = 8080;
     private static Retrofit retrofit;

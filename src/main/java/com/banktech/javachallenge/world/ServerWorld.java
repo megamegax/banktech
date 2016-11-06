@@ -1,6 +1,7 @@
 package com.banktech.javachallenge.world;
 
 import com.banktech.javachallenge.service.domain.Position;
+import com.banktech.javachallenge.service.domain.game.SimpleResponse;
 import com.banktech.javachallenge.service.domain.submarine.MoveRequest;
 import com.banktech.javachallenge.service.domain.submarine.ShootRequest;
 import com.banktech.javachallenge.service.domain.submarine.SonarResponse;
@@ -49,13 +50,15 @@ public class ServerWorld implements World {
      * @param moveRequest {@link MoveRequest}
      */
     @Override
-    public void move(final Submarine submarine, final MoveRequest moveRequest) {
+    public SimpleResponse move(final Submarine submarine, final MoveRequest moveRequest) {
         Submarine selectedSubmarine = (Submarine) cellAt(submarine.getPosition());
         map.remove(submarine);
         Position newPosition = calculateMovement(selectedSubmarine, moveRequest);
         selectedSubmarine.setPosition(newPosition);
         map.put(newPosition, selectedSubmarine);
+        return new SimpleResponse();
     }
+
     /**
      * Shoot with selected {@link Submarine}.
      *
@@ -63,8 +66,8 @@ public class ServerWorld implements World {
      * @param shootRequest {@link ShootRequest}
      */
     @Override
-    public void shoot(Submarine submarine, ShootRequest shootRequest) {
-
+    public SimpleResponse shoot(Submarine submarine, ShootRequest shootRequest) {
+        return new SimpleResponse();
     }
 
     /**
