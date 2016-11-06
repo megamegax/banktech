@@ -43,4 +43,6 @@ public interface World {
      * @return {@link Position} containing the width and height of the World
      */
     Position size();
+
+    void sonar(Submarine selectedSubmarine) throws IOException;
 }

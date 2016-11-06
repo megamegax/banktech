@@ -1,17 +1,41 @@
 package com.banktech.javachallenge.service.domain.submarine;
 
+import java.util.ArrayList;
+import java.util.List;
 
 import com.banktech.javachallenge.service.domain.Position;
+import com.banktech.javachallenge.view.MapPanel;
 
 public class Submarine {
     protected String type;
     protected Long id;
     protected Position position;
     protected Owner owner;
-    protected Integer velocity;
+    protected Double velocity;
     protected Double angle;
 
     public Submarine() {
+    }
+
+    public List<Position> pathInRounds(int rounds) {
+        return pathInRounds(rounds, angle);
+    }
+
+    public List<Position> pathInRounds(int rounds, double newAngle) {
+        List<Position> positions = new ArrayList<>();
+        for (double d = 0; d < rounds; d += 0.1) {
+            positions.add(locationInRounds(d, newAngle));
+        }
+        return positions;
+    }
+
+    public Position locationInRounds(double rounds) {
+        return locationInRounds(rounds, angle);
+    }
+
+    public Position locationInRounds(double rounds, double newAngle) {
+        return new Position(position.getX() + Math.cos(MapPanel.angleToRadian(newAngle)) * velocity * rounds,
+                position.getY() + Math.sin(MapPanel.angleToRadian(newAngle)) * velocity * rounds);
     }
 
     public String getType() {
@@ -46,11 +70,11 @@ public class Submarine {
         this.owner = owner;
     }
 
-    public Integer getVelocity() {
+    public Double getVelocity() {
         return velocity;
     }
 
-    public void setVelocity(Integer velocity) {
+    public void setVelocity(Double velocity) {
         this.velocity = velocity;
     }
 
@@ -64,28 +88,27 @@ public class Submarine {
 
     @Override
     public String toString() {
-        return "Submarine{" +
-                "type='" + type + '\'' +
-                ", id=" + id +
-                ", position=" + position +
-                ", owner=" + owner +
-                ", velocity=" + velocity +
-                ", angle=" + angle +
-                '}';
+        return "Submarine{" + "type='" + type + '\'' + ", id=" + id + ", position=" + position + ", owner=" + owner + ", velocity=" + velocity
+                + ", angle=" + angle + '}';
     }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Submarine)) return false;
+        if (this == o)
+            return true;
+        if (!(o instanceof Submarine))
+            return false;
 
         Submarine submarine = (Submarine) o;
 
-        if (getType() != null ? !getType().equals(submarine.getType()) : submarine.getType() != null) return false;
-        if (getId() != null ? !getId().equals(submarine.getId()) : submarine.getId() != null) return false;
+        if (getType() != null ? !getType().equals(submarine.getType()) : submarine.getType() != null)
+            return false;
+        if (getId() != null ? !getId().equals(submarine.getId()) : submarine.getId() != null)
+            return false;
         if (getPosition() != null ? !getPosition().equals(submarine.getPosition()) : submarine.getPosition() != null)
             return false;
-        if (getOwner() != null ? !getOwner().equals(submarine.getOwner()) : submarine.getOwner() != null) return false;
+        if (getOwner() != null ? !getOwner().equals(submarine.getOwner()) : submarine.getOwner() != null)
+            return false;
         if (getVelocity() != null ? !getVelocity().equals(submarine.getVelocity()) : submarine.getVelocity() != null)
             return false;
         return getAngle() != null ? getAngle().equals(submarine.getAngle()) : submarine.getAngle() == null;

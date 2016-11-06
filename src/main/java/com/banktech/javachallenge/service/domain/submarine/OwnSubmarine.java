@@ -6,7 +6,7 @@ public class OwnSubmarine extends Submarine {
     private Integer sonarCooldown;
     private Integer torpedoCooldown;
     private Integer sonarExtended;
-
+    
     public OwnSubmarine() {
     }
 

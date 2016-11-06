@@ -60,8 +60,12 @@ public class MapPanel extends JPanel {
 
     private void drawSpeed(Graphics g, Position position, double angle, double speed) {
         g.drawLine(scale(position.getX()), scale(position.getY()), 
-                scale(position.getX() + SPEED_SCALE * Math.cos(angle / 180 * Math.PI) * speed), 
-                scale(position.getY() + SPEED_SCALE * Math.sin(angle / 180 * Math.PI) * speed));
+                scale(position.getX() + SPEED_SCALE * Math.cos(angleToRadian(angle)) * speed), 
+                scale(position.getY() + SPEED_SCALE * Math.sin(angleToRadian(angle)) * speed));
+    }
+
+    public static double angleToRadian(double angle) {
+        return angle / 180 * Math.PI;
     }
     
     private void drawCircle(Graphics g, Position position, int radius) {

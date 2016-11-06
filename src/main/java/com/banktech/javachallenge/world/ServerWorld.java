@@ -5,6 +5,7 @@ import com.banktech.javachallenge.service.domain.submarine.MoveRequest;
 import com.banktech.javachallenge.service.domain.submarine.ShootRequest;
 import com.banktech.javachallenge.service.domain.submarine.Submarine;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -76,5 +77,10 @@ public class ServerWorld implements World {
 
     public Position size() {
         return size;
+    }
+
+    @Override
+    public void sonar(Submarine selectedSubmarine) throws IOException {
+        throw new UnsupportedOperationException();
     }
 }

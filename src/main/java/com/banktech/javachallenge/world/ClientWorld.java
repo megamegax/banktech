@@ -70,7 +70,12 @@ public class ClientWorld implements World {
     public void shoot(Submarine selectedSubmarine, ShootRequest shootRequest) throws IOException {
         delegateShootToServer(shootRequest, selectedSubmarine);
     }
-
+    
+    @Override
+    public void sonar(Submarine selectedSubmarine) throws IOException {
+        Api.submarineService().sonar(gameId, selectedSubmarine.getId()).execute();
+    }
+    
     private void delegateShootToServer(ShootRequest shootRequest, Submarine selectedSubmarine) throws IOException {
         Api.submarineService().shoot(gameId, selectedSubmarine.getId(), shootRequest).execute();
     }

@@ -12,7 +12,8 @@ import com.banktech.javachallenge.service.domain.game.GameInfoResponse;
 import com.banktech.javachallenge.service.domain.game.GameResponse;
 import com.banktech.javachallenge.service.domain.game.SimpleResponse;
 import com.banktech.javachallenge.service.domain.game.Status;
-import com.banktech.javachallenge.service.domain.submarine.MoveRequest;
+import com.banktech.javachallenge.service.domain.logic.GameLogic;
+import com.banktech.javachallenge.service.domain.logic.SimpleGameLogic;
 import com.banktech.javachallenge.service.domain.submarine.OwnSubmarine;
 import com.banktech.javachallenge.service.domain.submarine.SubmarineResponse;
 import com.banktech.javachallenge.view.ApiCall;
@@ -24,19 +25,18 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-
 public class GameRunner {
     private List<ViewModel> turns = new ArrayList<>();
     private GUIListener listener;
     private long gameId;
     private int localRound;
+    private GameLogic gameLogic = new SimpleGameLogic();
 
     GameRunner(GUIListener listener) {
         this.listener = listener;
         turns.add(new ViewModel());
         localRound = 0;
     }
-
 
     void listGames(Consumer<GameResponse> consumer) {
         Call<GameResponse> gameResponseCall = Api.gameService().listGames();
@@ -65,7 +65,6 @@ public class GameRunner {
         });
     }
 
-
     private void handleConnectionErrors(Response response) {
         if (response != null) {
             if (response.errorBody() != null) {
@@ -82,7 +81,6 @@ public class GameRunner {
     private int getCurrentTurn() {
         return turns.size() - 1;
     }
-
 
     private int getCurrentRound() {
         if (turns.size() == 0) {
@@ -177,7 +175,6 @@ public class GameRunner {
 
     }
 
-
     public void printLogs() {
         System.out.println("------Turn: " + (getCurrentRound() + 1) + "------");
         List<ApiCall> calls = getCurrentViewModel().getCalls();
@@ -199,29 +196,18 @@ public class GameRunner {
                         alreadyUsedTurn[0] = false;
                     }
                     if (!alreadyUsedTurn[0]) {
-                        if (getCurrentTurn() < 151) {
-                            loadOwnSubmarines();
-                        }
-                        alreadyUsedTurn[0] = true;
                         try {
-                            int maxSpeed = getCurrentViewModel().getGame().getMapConfiguration().getMaxSpeed();
-                            int maxAccel = getCurrentViewModel().getGame().getMapConfiguration().getMaxAccelerationPerRound();
-                            List<OwnSubmarine> ownSubmarines = getCurrentViewModel().getOwnSubmarines();
-                            if (!ownSubmarines.isEmpty()) {
-                                OwnSubmarine ownSubmarine = ownSubmarines.get(0);
-                                int speedChange = 0;
-                                if (ownSubmarine.getVelocity() < maxSpeed) {
-                                    speedChange = Math.min(maxSpeed - ownSubmarine.getVelocity(), maxAccel);
-                                }
-                                getCurrentViewModel().getWorldMap().move(ownSubmarine, new MoveRequest((double)speedChange, 15.0));
+                            if (getCurrentTurn() < 151) {
+                                loadOwnSubmarines();
                             }
+                            alreadyUsedTurn[0] = true;
+                            gameLogic.step(getCurrentViewModel());
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
                         printLogs();
                     }
-                }
-                ));
+                }));
                 try {
                     Thread.sleep(1000);
                 } catch (InterruptedException e) {
@@ -231,37 +217,25 @@ public class GameRunner {
             System.out.println("Játék vége!");
         });
 
-
     }
 
-    private void loadOwnSubmarines() {
+    private void loadOwnSubmarines() throws IOException {
         String method = Api.gameService().gameInfo(gameId).request().method();
         String url = Api.gameService().gameInfo(gameId).request().url().url().toString();
-        Api.submarineService().listSubmarines(gameId).enqueue(new Callback<SubmarineResponse>() {
-            @Override
-            public void onResponse(Call<SubmarineResponse> call, Response<SubmarineResponse> response) {
-                if (response.isSuccessful()) {
-                    handleConnectionErrors(response);
-                    if (response.body() != null) {
-                        List<OwnSubmarine> submarines = response.body().getSubmarines();
-                        SimpleResponse simpleResponse = new SimpleResponse(response.body().getMessage(), response.body().getCode());
-                        ApiCall apiCall = new ApiCall(method, url, simpleResponse);
-                        refreshCallHistory(apiCall);
-                        submarines.forEach(ownSubmarine -> {
-                            getCurrentViewModel().getWorldMap().replaceCell(ownSubmarine.getPosition(), ownSubmarine);
-                        });
-
-                        getCurrentViewModel().setOwnSubmarines(submarines);
-                    }
-                }
+        Response<SubmarineResponse> response = Api.submarineService().listSubmarines(gameId).execute();
+        if (response.isSuccessful()) {
+            handleConnectionErrors(response);
+            if (response.body() != null) {
+                List<OwnSubmarine> submarines = response.body().getSubmarines();
+                SimpleResponse simpleResponse = new SimpleResponse(response.body().getMessage(), response.body().getCode());
+                ApiCall apiCall = new ApiCall(method, url, simpleResponse);
+                refreshCallHistory(apiCall);
+                submarines.forEach(ownSubmarine -> {
+                    getCurrentViewModel().getWorldMap().replaceCell(ownSubmarine.getPosition(), ownSubmarine);
+                });
+                getCurrentViewModel().setOwnSubmarines(submarines);
             }
-
-            @Override
-            public void onFailure(Call<SubmarineResponse> call, Throwable throwable) {
-                throwable.printStackTrace();
-            }
-        });
-
+        }
     }
 
     private ViewModel getCurrentViewModel() {

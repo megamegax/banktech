@@ -30,47 +30,47 @@ public class ViewModel {
         this.worldMap = worldMap;
     }
 
-    public Game getGame() {
+    public synchronized Game getGame() {
         return game;
     }
 
-    public void setGame(Game game) {
+    public synchronized void setGame(Game game) {
         this.game = game;
     }
 
-    public List<ApiCall> getCalls() {
+    public synchronized List<ApiCall> getCalls() {
         return calls;
     }
 
-    public void setCalls(List<ApiCall> calls) {
+    public synchronized void setCalls(List<ApiCall> calls) {
         this.calls = calls;
     }
 
-    public List<OwnSubmarine> getOwnSubmarines() {
+    public synchronized List<OwnSubmarine> getOwnSubmarines() {
         return ownSubmarines;
     }
 
-    public void setOwnSubmarines(List<OwnSubmarine> ownSubmarines) {
+    public synchronized void setOwnSubmarines(List<OwnSubmarine> ownSubmarines) {
         this.ownSubmarines = ownSubmarines;
     }
 
-    public List<Submarine> getDetectedSubmarines() {
+    public synchronized List<Submarine> getDetectedSubmarines() {
         return detectedSubmarines;
     }
 
-    public void setDetectedSubmarines(List<Submarine> detectedSubmarines) {
+    public synchronized void setDetectedSubmarines(List<Submarine> detectedSubmarines) {
         this.detectedSubmarines = detectedSubmarines;
     }
 
-    public World getWorldMap() {
+    public synchronized World getWorldMap() {
         return worldMap;
     }
 
-    public void setWorldMap(World worldMap) {
+    public synchronized void setWorldMap(World worldMap) {
         this.worldMap = worldMap;
     }
 
-    public ViewModel cloneToNewTurn() {
+    public synchronized ViewModel cloneToNewTurn() {
         return new ViewModel(game, new ArrayList<>(), ownSubmarines, detectedSubmarines, worldMap);
     }
 }
