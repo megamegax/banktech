@@ -3,6 +3,7 @@ package com.banktech.javachallenge.world;
 import com.banktech.javachallenge.service.domain.Position;
 import com.banktech.javachallenge.service.domain.submarine.MoveRequest;
 import com.banktech.javachallenge.service.domain.submarine.ShootRequest;
+import com.banktech.javachallenge.service.domain.submarine.SonarResponse;
 import com.banktech.javachallenge.service.domain.submarine.Submarine;
 import com.banktech.javachallenge.world.domain.Island;
 import com.banktech.javachallenge.world.domain.Torpedo;
@@ -46,5 +47,12 @@ public interface World {
      */
     Position size();
 
-    void sonar(Submarine selectedSubmarine) throws IOException;
+    /**
+     * Sonar.
+     *
+     * @param selectedSubmarine {@link Submarine}
+     * @return {@link SonarResponse}
+     * @throws IOException
+     */
+    SonarResponse sonar(Submarine selectedSubmarine) throws IOException;
 }

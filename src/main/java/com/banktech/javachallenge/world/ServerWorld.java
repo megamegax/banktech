@@ -3,6 +3,7 @@ package com.banktech.javachallenge.world;
 import com.banktech.javachallenge.service.domain.Position;
 import com.banktech.javachallenge.service.domain.submarine.MoveRequest;
 import com.banktech.javachallenge.service.domain.submarine.ShootRequest;
+import com.banktech.javachallenge.service.domain.submarine.SonarResponse;
 import com.banktech.javachallenge.service.domain.submarine.Submarine;
 import com.banktech.javachallenge.world.domain.Island;
 import com.banktech.javachallenge.world.domain.Torpedo;
@@ -82,7 +83,7 @@ public class ServerWorld implements World {
     }
 
     @Override
-    public void sonar(Submarine selectedSubmarine) throws IOException {
+    public SonarResponse sonar(Submarine selectedSubmarine) throws IOException {
         throw new UnsupportedOperationException();
     }
 }

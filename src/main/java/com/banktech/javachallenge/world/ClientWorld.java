@@ -5,9 +5,11 @@ import com.banktech.javachallenge.service.domain.Position;
 import com.banktech.javachallenge.service.domain.game.Game;
 import com.banktech.javachallenge.service.domain.submarine.MoveRequest;
 import com.banktech.javachallenge.service.domain.submarine.ShootRequest;
+import com.banktech.javachallenge.service.domain.submarine.SonarResponse;
 import com.banktech.javachallenge.service.domain.submarine.Submarine;
 import com.banktech.javachallenge.world.domain.Island;
 import com.banktech.javachallenge.world.domain.Torpedo;
+import retrofit2.Response;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -74,8 +76,9 @@ public class ClientWorld implements World {
     }
     
     @Override
-    public void sonar(Submarine selectedSubmarine) throws IOException {
-        Api.submarineService().sonar(gameId, selectedSubmarine.getId()).execute();
+    public SonarResponse sonar(Submarine selectedSubmarine) throws IOException {
+        Response<SonarResponse> response = Api.submarineService().sonar(gameId, selectedSubmarine.getId()).execute();
+        return response.body();
     }
     
     private void delegateShootToServer(ShootRequest shootRequest, Submarine selectedSubmarine) throws IOException {

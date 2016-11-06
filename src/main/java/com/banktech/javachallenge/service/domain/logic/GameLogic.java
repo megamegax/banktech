@@ -7,6 +7,6 @@ import java.io.IOException;
 
 public interface GameLogic {
     
-    void step(ViewModel currentViewModel) throws IOException;
+    ViewModel step(ViewModel currentViewModel) throws IOException;
 
 }

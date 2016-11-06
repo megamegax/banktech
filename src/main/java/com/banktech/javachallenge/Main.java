@@ -66,4 +66,8 @@ public class Main {
     private static Integer convertToInt(String port) {
         return Integer.parseInt(port);
     }
+
+    public static String ourTeamName() {
+        return "Nightmare Build";
+    }
 }

@@ -78,7 +78,7 @@ public class GameRunner {
         }
     }
 
-    private int getCurrentTurn() {
+    private int getLastTurnNumber() {
         return turns.size() - 1;
     }
 
@@ -197,11 +197,12 @@ public class GameRunner {
                     }
                     if (!alreadyUsedTurn[0]) {
                         try {
-                            if (getCurrentTurn() < 151) {
+                            if (getLastTurnNumber() < 151) {
                                 loadOwnSubmarines();
                             }
                             alreadyUsedTurn[0] = true;
-                            gameLogic.step(getCurrentViewModel());
+                            ViewModel updatedViewModel = gameLogic.step(getCurrentViewModel());
+                            turns.set(getLastTurnNumber(), updatedViewModel);
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -239,7 +240,7 @@ public class GameRunner {
     }
 
     private ViewModel getCurrentViewModel() {
-        return turns.get(getCurrentTurn());
+        return turns.get(getLastTurnNumber());
     }
 
     private void incTurn() {
