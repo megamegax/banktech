@@ -194,7 +194,7 @@ public class GameRunner {
                     }
                 }));
                 try {
-                    Thread.sleep(1000);
+                    Thread.sleep(900);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }

@@ -13,7 +13,7 @@ public class MapConfiguration {
     private List<Position> islandPositions;
     private Integer teamCount;
     private Integer submarinesPerTeam;
-    private Integer torpedoDamate;
+    private Integer torpedoDamage;
     private Integer torpedoHitScore;
     private Integer torpedoHitPenalty;
     private Integer torpedoCooldown;
@@ -76,12 +76,12 @@ public class MapConfiguration {
         this.submarinesPerTeam = submarinesPerTeam;
     }
 
-    public Integer getTorpedoDamate() {
-        return torpedoDamate;
+    public Integer getTorpedoDamage() {
+        return torpedoDamage;
     }
 
-    public void setTorpedoDamate(Integer torpedoDamate) {
-        this.torpedoDamate = torpedoDamate;
+    public void setTorpedoDamage(Integer torpedoDamage) {
+        this.torpedoDamage = torpedoDamage;
     }
 
     public Integer getTorpedoHitScore() {
@@ -236,7 +236,7 @@ public class MapConfiguration {
                 ", islandPositions=" + islandPositions +
                 ", teamCount=" + teamCount +
                 ", submarinesPerTeam=" + submarinesPerTeam +
-                ", torpedoDamate=" + torpedoDamate +
+                ", torpedoDamage=" + torpedoDamage +
                 ", torpedoHitScore=" + torpedoHitScore +
                 ", torpedoHitPenalty=" + torpedoHitPenalty +
                 ", torpedoCooldown=" + torpedoCooldown +
