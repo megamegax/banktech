@@ -35,9 +35,19 @@ public class SimpleGameLogic implements GameLogic {
         fillAttributes(currentViewModel);
         List<OwnSubmarine> ownSubmarines = currentViewModel.getOwnSubmarines();
         for (OwnSubmarine ownSubmarine : ownSubmarines) {
-            handleSubmarine(currentViewModel.getWorldMap(), ownSubmarine);
+            handleSonar(currentViewModel.getWorldMap(), ownSubmarine);
+        }
+        for (OwnSubmarine ownSubmarine : ownSubmarines) {
+            handleSubmarineMove(currentViewModel.getWorldMap(), ownSubmarine);
         }
         return viewModel;
+    }
+
+    private void handleSonar(World worldMap, OwnSubmarine ownSubmarine) throws IOException {
+        if (!weHaveSonar() && ownSubmarine.getSonarCooldown() == 0) {
+            handleSonarResponse(extendedSonar(worldMap, ownSubmarine));
+        }
+        handleSonarResponse(sonar(worldMap, ownSubmarine));
     }
 
     private void fillAttributes(ViewModel currentViewModel) {
@@ -45,11 +55,7 @@ public class SimpleGameLogic implements GameLogic {
         mapConfiguration = currentViewModel.getGame().getMapConfiguration();
     }
 
-    public void handleSubmarine(World world, OwnSubmarine submarine) throws IOException {
-        if (submarine.getSonarCooldown() == 0) {
-            handleSonarResponse(extendedSonar(world, submarine));
-        }
-        handleSonarResponse(sonar(world, submarine));
+    public void handleSubmarineMove(World world, OwnSubmarine submarine) throws IOException {
         if (submarine.getTorpedoCooldown() == 0) {
             List<ProjectedPosition> projectedLocations = submarine.torpedoPathInRounds(mapConfiguration.getTorpedoRange(), mapConfiguration.getTorpedoSpeed());
             if (closeEnemy(submarine, projectedLocations)) {
@@ -59,6 +65,10 @@ public class SimpleGameLogic implements GameLogic {
         double speedChange = maxAcceleration(submarine);
         double angle = avoidCollision(world, submarine);
         move(world, submarine, speedChange, angle);
+    }
+
+    private boolean weHaveSonar() {
+        return viewModel.getOwnSubmarines().stream().filter(s -> s.getSonarExtended() > 0).findAny().isPresent();
     }
 
     private boolean closeEnemy(OwnSubmarine ownSubmarine, List<ProjectedPosition> projectedLocations) {
@@ -86,7 +96,6 @@ public class SimpleGameLogic implements GameLogic {
                 return true;
             }
         }
-        System.out.println(min + "-" + mapConfiguration.getSubmarineSize());
         return false;
     }
 
@@ -190,7 +199,6 @@ public class SimpleGameLogic implements GameLogic {
             }
         }
         Optional<Entity> closest = viewModel.getDetectedSubmarines().stream()
-                .filter(e -> !submarineDesiredDestination.values().contains(e.getPosition()))
                 .min((a, b) -> Double.compare(a.getPosition().distance(submarine.getPosition()), b.getPosition().distance(submarine.getPosition())));
         if (closest.isPresent()) {
             desiredDestination = targetEnemy(submarine, closest.get());
