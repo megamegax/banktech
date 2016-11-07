@@ -80,7 +80,6 @@ public class SimpleGameLogic implements GameLogic {
             viewModel.setDetectedSubmarines(detectedSubmarines);
 
             List<Entity> detectedTorpedos = sonarResponse.getEntities().stream()
-                    .filter(entity -> !entity.getOwner().getName().equals(Main.ourTeamName()))
                     .filter(entity -> entity.getType().equals(EntityType.Torpedo)).collect(Collectors.toList());
 
             viewModel.setDetectedTorpedos(detectedTorpedos);
