@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.banktech.javachallenge.service.domain.Position;
+import com.banktech.javachallenge.service.domain.ProjectedPosition;
 import com.banktech.javachallenge.view.gui.MapUtil;
 
 public class Entity {
@@ -17,25 +18,34 @@ public class Entity {
     public Entity() {
     }
 
-    public List<Position> pathInRounds(int rounds) {
-        return pathInRounds(rounds, angle);
+    public List<ProjectedPosition> torpedoPathInRounds(double rounds, double speed) {
+        return pathInRounds(rounds, angle, speed);
     }
 
-    public List<Position> pathInRounds(int rounds, double newAngle) {
-        List<Position> positions = new ArrayList<>();
+    public List<ProjectedPosition> pathInRounds(double rounds) {
+        return pathInRounds(rounds, angle, velocity);
+    }
+
+    public List<ProjectedPosition> pathInRounds(double rounds, double newAngle) {
+        return pathInRounds(rounds, newAngle, velocity);
+    }
+
+    public List<ProjectedPosition> pathInRounds(double rounds, double newAngle, double speed) {
+        List<ProjectedPosition> positions = new ArrayList<>();
         for (double d = 0; d < rounds; d += 0.1) {
-            positions.add(locationInRounds(d, newAngle));
+            positions.add(locationInRounds(d, newAngle, speed));
         }
         return positions;
     }
 
-    public Position locationInRounds(double rounds) {
-        return locationInRounds(rounds, angle);
+    public ProjectedPosition locationInRounds(double rounds) {
+        return locationInRounds(rounds, angle, velocity);
     }
 
-    public Position locationInRounds(double rounds, double newAngle) {
-        return new Position(position.getX() + Math.cos(MapUtil.angleToRadian(newAngle)) * velocity * rounds,
-                position.getY() + Math.sin(MapUtil.angleToRadian(newAngle)) * velocity * rounds);
+    public ProjectedPosition locationInRounds(double rounds, double newAngle, double speed) {
+        Position projected = new Position(position.getX() + Math.cos(MapUtil.angleToRadian(newAngle)) * speed * rounds,
+                position.getY() + Math.sin(MapUtil.angleToRadian(newAngle)) * speed * rounds);
+        return new ProjectedPosition(projected, rounds);
     }
 
     public EntityType getType() {

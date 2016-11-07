@@ -71,7 +71,7 @@ public class MapCanvas extends javafx.scene.canvas.Canvas {
             List<Entity> detectedTorpedos = viewModel.getDetectedTorpedos();
             for (Entity torpedo : detectedTorpedos) {
                 drawFillCircle(g, torpedo.getPosition(), 2);
-                drawCircle(g, torpedo.getPosition(), viewModel.getGame().getMapConfiguration().getTorpedoRange());
+                drawCircle(g, torpedo.getPosition(), viewModel.getGame().getMapConfiguration().getTorpedoExplosionRadius());
                 drawSpeed(g, torpedo.getPosition(), torpedo.getAngle(), torpedo.getVelocity());
             }
         }
