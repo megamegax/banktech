@@ -31,7 +31,6 @@ public class MapCanvas extends javafx.scene.canvas.Canvas {
         g.setFill(Color.ALICEBLUE);
         g.strokeRect(0, 0, getWidth(), getHeight());
         g.fillRect(0, 0, getWidth(), getHeight());
-        g.stroke();
         g.setStroke(Color.FORESTGREEN);
         g.setFill(Color.FORESTGREEN.brighter());
         if (viewModel != null && viewModel.getGame() != null) {
@@ -59,14 +58,16 @@ public class MapCanvas extends javafx.scene.canvas.Canvas {
             for (Entity submarine : enemySubmarines) {
                 drawSpeed(g, submarine.getPosition(), submarine.getAngle(), submarine.getVelocity());
             }
-            g.setStroke(Color.BLACK.brighter());
+            g.setStroke(Color.RED.brighter());
+            g.setFill(Color.RED.brighter());
             List<Torpedo> torpedos = viewModel.getShootedTorpedos();
             for (Torpedo torpedo : torpedos) {
                 drawFillCircle(g, torpedo.getCurrentPosition(), 2);
                 drawCircle(g, torpedo.getCurrentPosition(), viewModel.getGame().getMapConfiguration().getTorpedoRange());
                 drawSpeed(g, torpedo.getCurrentPosition(), torpedo.getAngle(), torpedo.getSpeed());
             }
-            g.setStroke(Color.BLANCHEDALMOND.brighter());
+            g.setStroke(Color.RED.brighter());
+            g.setFill(Color.RED.brighter());
             List<Entity> detectedTorpedos = viewModel.getDetectedTorpedos();
             for (Entity torpedo : detectedTorpedos) {
                 drawFillCircle(g, torpedo.getPosition(), 2);
