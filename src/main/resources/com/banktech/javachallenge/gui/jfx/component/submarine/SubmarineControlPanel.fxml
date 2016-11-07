@@ -5,17 +5,24 @@
 <?import com.jfoenix.controls.JFXToggleButton?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ProgressBar?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane prefHeight="307.0" prefWidth="198.0" style="-fx-border-color: black;" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.banktech.javachallenge.view.gui.jfx.component.submarine.SubmarineControlPanelController">
+<AnchorPane prefHeight="372.0" prefWidth="198.0" style="-fx-border-color: black;" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.banktech.javachallenge.view.gui.jfx.component.submarine.SubmarineControlPanelController">
    <children>
-      <Label layoutX="14.0" layoutY="79.0" text="Sebesség:" />
+      <Label layoutX="13.0" layoutY="173.0" text="Sebesség:" />
       <Label fx:id="submarineName" layoutX="7.0" layoutY="6.0" text="Submarine 1" />
-      <JFXSlider fx:id="submarineSpeedSlider" layoutX="30.0" layoutY="107.0" />
-      <JFXToggleButton fx:id="toggleAutopilot" layoutX="12.0" layoutY="23.0" prefHeight="56.0" prefWidth="176.0" text="Manuális vezérlés" />
-      <Label layoutX="14.0" layoutY="130.0" prefHeight="17.0" prefWidth="53.0" text="Irány:" />
-      <JFXButton fx:id="btnStop" layoutX="77.0" layoutY="239.0" style="-fx-background-color: #ffaaaa;" text="Lövés" />
-      <AnchorPane fx:id="wheelContainer" layoutX="99.0" layoutY="183.0" prefHeight="25.0" prefWidth="27.0" />
+      <JFXSlider fx:id="submarineSpeedSlider" layoutX="29.0" layoutY="201.0" prefHeight="14.0" prefWidth="162.0" />
+      <JFXToggleButton fx:id="toggleAutopilot" layoutX="20.0" layoutY="118.0" prefHeight="17.0" prefWidth="173.0" text="Manuális vezérlés" />
+      <Label layoutX="13.0" layoutY="224.0" prefHeight="17.0" prefWidth="53.0" text="Irány:" />
+      <JFXButton fx:id="btnStop" layoutX="84.0" layoutY="333.0" style="-fx-background-color: #ffaaaa;" text="Lövés" />
+      <AnchorPane fx:id="wheelContainer" layoutX="102.0" layoutY="278.0" prefHeight="25.0" prefWidth="27.0" />
+      <ProgressBar fx:id="hpBar" layoutX="128.0" layoutY="56.0" prefHeight="18.0" prefWidth="83.0" progress="0.0" rotate="-90.0" />
+      <ProgressBar fx:id="torpedoCooldownBar" layoutX="-1.0" layoutY="56.0" prefHeight="18.0" prefWidth="83.0" progress="0.0" rotate="-90.0" />
+      <ProgressBar fx:id="sonarCooldownBar" layoutX="65.0" layoutY="56.0" prefHeight="18.0" prefWidth="83.0" progress="0.0" rotate="-90.0" />
+      <Label layoutX="17.0" layoutY="109.0" text="Torpedo" />
+      <Label layoutX="91.0" layoutY="109.0" text="Sonar" />
+      <Label layoutX="162.0" layoutY="109.0" text="HP" />
    </children>
    <padding>
       <Insets bottom="10.0" />

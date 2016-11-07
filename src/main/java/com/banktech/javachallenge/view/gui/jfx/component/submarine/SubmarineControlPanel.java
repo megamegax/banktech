@@ -1,7 +1,6 @@
 package com.banktech.javachallenge.view.gui.jfx.component.submarine;
 
 import com.banktech.javachallenge.service.domain.submarine.OwnSubmarine;
-import com.banktech.javachallenge.service.world.World;
 import com.banktech.javachallenge.view.domain.ViewModel;
 
 import javafx.application.Platform;
@@ -21,9 +20,9 @@ public class SubmarineControlPanel extends AnchorPane {
         try {
             Pane panel = loader.load();
             controller = loader.getController();
-            controller.setSubmarine(submarine);
-            controller.setWorld(model.getWorldMap());
-            controller.setGame(model.getGame());
+            controller.initSubmarine(submarine);
+            controller.initWorld(model.getWorldMap());
+            controller.initGame(model.getGame());
             Platform.runLater(() -> this.getChildren().add(panel));
 
         } catch (IOException e) {

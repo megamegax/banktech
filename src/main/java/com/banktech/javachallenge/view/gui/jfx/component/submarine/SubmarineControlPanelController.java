@@ -9,6 +9,7 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.control.Slider;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
@@ -27,6 +28,18 @@ public class SubmarineControlPanelController implements Initializable {
 
     @FXML
     Slider submarineSpeedSlider;
+
+    @FXML
+    ProgressBar hpBar;
+
+    @FXML
+    ProgressBar torpedoCooldownBar;
+
+    @FXML
+    ProgressBar sonarCooldownBar;
+
+    double originalHp = 100;
+
     private World world;
     private Game game;
     private OwnSubmarine submarine;
@@ -41,16 +54,18 @@ public class SubmarineControlPanelController implements Initializable {
 
     }
 
-    public void setGame(Game game) {
+    public void initGame(Game game) {
         this.game = game;
+
     }
 
-    public void setWorld(World world) {
+    public void initWorld(World world) {
         this.world = world;
     }
 
-    public void setSubmarine(OwnSubmarine submarine) {
+    public void initSubmarine(OwnSubmarine submarine) {
         this.submarine = submarine;
+        originalHp = submarine.getHp();
         Platform.runLater(() -> submarineName.setText(String.valueOf(submarine.getId())));
     }
 
@@ -63,7 +78,25 @@ public class SubmarineControlPanelController implements Initializable {
         Platform.runLater(() -> {
             wheel.setDirection(submarine.getAngle());
             submarineSpeedSlider.adjustValue(submarine.getVelocity());
+            calculateTorpedoCooldown();
+            calculateExtendedSonarCooldown();
+            calculateHp();
         });
-
     }
+
+    private void calculateTorpedoCooldown() {
+        double progress = (double) submarine.getTorpedoCooldown() / (double) game.getMapConfiguration().getTorpedoCooldown();
+        torpedoCooldownBar.setProgress(progress);
+    }
+
+    private void calculateExtendedSonarCooldown() {
+        double progress = (double) submarine.getSonarCooldown() / (double) game.getMapConfiguration().getExtendedSonarCooldown();
+        sonarCooldownBar.setProgress(progress);
+    }
+
+    private void calculateHp() {
+        double progress = (double) submarine.getHp() / originalHp;
+        hpBar.setProgress(progress);
+    }
+
 }
