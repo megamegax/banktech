@@ -1,12 +1,14 @@
 package com.banktech.javachallenge.view.gui.jfx;
 
 import com.banktech.javachallenge.service.domain.game.Scores;
+import com.banktech.javachallenge.service.domain.submarine.OwnSubmarine;
 import com.banktech.javachallenge.view.GUIListener;
 import com.banktech.javachallenge.view.domain.ApiCall;
 import com.banktech.javachallenge.view.domain.ViewModel;
 
 import com.banktech.javachallenge.view.gui.jfx.component.map.MapCanvas;
 import com.banktech.javachallenge.view.gui.jfx.component.submarine.SubmarineControlPanel;
+import com.banktech.javachallenge.view.gui.jfx.component.submarine.SubmarineControlPanelController;
 import com.jfoenix.controls.JFXListView;
 import com.jfoenix.controls.JFXToggleButton;
 import javafx.application.Platform;
@@ -21,9 +23,12 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 
 public class TorpedoController implements Initializable, GUIListener {
 
@@ -46,12 +51,11 @@ public class TorpedoController implements Initializable, GUIListener {
     @FXML
     JFXListView<ApiCall> logs;
 
-
     private MapCanvas canvas;
     private List<ViewModel> turns;
     private int currentIndex = 0;
     private boolean autoRefresh = true;
-    private boolean submarinesCreated = false;
+    private ArrayList<SubmarineControlPanelController> submarineControlPanels = new ArrayList<>();
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -75,21 +79,31 @@ public class TorpedoController implements Initializable, GUIListener {
         if (model.getGame() != null) {
             printScores(model.getGame().getScores());
             refreshTurnNumber(model);
-            if (!submarinesCreated) {
-                refreshAdminlayout(model);
+            if (submarineControlPanels.isEmpty()) {
+                addSubmarineControlPanels(model);
+
+                submarineControlPanels.forEach(submarineControlPanel -> {
+                    List<OwnSubmarine> ownSubmarines = model.getOwnSubmarines();
+                    if (ownSubmarines != null && !ownSubmarines.isEmpty()) {
+                        Optional<OwnSubmarine> submarine = ownSubmarines.stream()
+                                .filter(ownSubmarine -> ownSubmarine.getId().equals(submarineControlPanel.getSubmarineId())).findFirst();
+
+                        if (submarine.isPresent()) {
+                            submarineControlPanel.refresh(submarine.get());
+                        }
+                    }
+                });
             }
         }
 
-
     }
 
-    private void refreshAdminlayout(ViewModel model) {
-        Platform.runLater(() -> {
-            for (int i = 0; i < model.getGame().getMapConfiguration().getSubmarinesPerTeam(); i++) {
-                adminLayout.getChildren().add(new SubmarineControlPanel(null, model.getWorldMap()));
-            }
-        });
-        submarinesCreated = true;
+    private void addSubmarineControlPanels(ViewModel model) {
+        for (OwnSubmarine submarine : model.getOwnSubmarines()) {
+            SubmarineControlPanel panel = new SubmarineControlPanel(submarine, model);
+            submarineControlPanels.add(panel.getController());
+            Platform.runLater(() -> adminLayout.getChildren().add(panel));
+        }
     }
 
     private void refreshTurnNumber(ViewModel model) {

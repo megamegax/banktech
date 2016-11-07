@@ -159,7 +159,7 @@ public class GameRunner {
 
     }
 
-    public void printLogs() {
+    private void printLogs() {
         System.out.println("------Turn: " + (getCurrentRound() + 1) + "------");
       /*  List<ApiCall> calls = getCurrentViewModel().getCalls();
         calls.forEach(System.out::println);*/
@@ -220,6 +220,7 @@ public class GameRunner {
                 SimpleResponse simpleResponse = new SimpleResponse(response.body().getMessage(), response.body().getCode());
                 ApiCall apiCall = new ApiCall(Api.LOAD_OWN_SUBMARINES, gameId, simpleResponse);
                 refreshCallHistory(apiCall);
+                if(submarines != null)
                 submarines.forEach(ownSubmarine ->
                         getCurrentViewModel().getWorldMap().replaceCell(ownSubmarine.getPosition(), ownSubmarine)
                 );
