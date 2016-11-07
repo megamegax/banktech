@@ -112,8 +112,12 @@ public class TorpedoController implements Initializable, GUIListener {
     }
 
     private void refreshTurnNumber(ViewModel model) {
-        Platform.runLater(() -> turnNumber.setText(String.valueOf(model.getGame().getRound())));
-
+        if (currentIndex != model.getGame().getRound()) {
+            Platform.runLater(
+                    () -> turnNumber.setText("Megjelenített kör: " + String.valueOf(currentIndex) + "(" + String.valueOf(model.getGame().getRound()) + ")"));
+        } else {
+            Platform.runLater(() -> turnNumber.setText("Megjelenített kör: " + String.valueOf(model.getGame().getRound())));
+        }
     }
 
     private void printScores(Scores scoresData) {

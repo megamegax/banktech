@@ -18,9 +18,9 @@
     <children>
         <JFXToolbar prefHeight="46.0" prefWidth="875.0" style="-fx-background-color: #aaaa88;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <left>
-                <HBox prefHeight="56.0" prefWidth="258.0" BorderPane.alignment="CENTER">
+                <HBox prefHeight="56.0" prefWidth="453.0" BorderPane.alignment="CENTER">
                     <children>
-                        <Label fx:id="turnNumber" prefHeight="59.0" prefWidth="91.0" text="Nigmare Build">
+                        <Label fx:id="turnNumber" prefHeight="56.0" prefWidth="167.0" text="Megjelenített kör: 150(151)">
                             <HBox.margin>
                                 <Insets left="10.0" />
                             </HBox.margin>
