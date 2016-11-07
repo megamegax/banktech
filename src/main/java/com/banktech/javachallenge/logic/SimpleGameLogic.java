@@ -28,7 +28,6 @@ public class SimpleGameLogic implements GameLogic {
     private ViewModel viewModel;
     private MapConfiguration mapConfiguration;
     private Map<Long, Target> submarineDesiredDestination = new HashMap<>();
-    
 
     @Override
     public synchronized ViewModel step(ViewModel currentViewModel) throws IOException {
@@ -79,7 +78,7 @@ public class SimpleGameLogic implements GameLogic {
                 .filter(e -> !e.getId().equals(ownSubmarine.getId()))
                 .filter(e -> close(projectedLocations, e))
                 .findAny().isPresent();
-        return enemyPresent.isPresent() 
+        return enemyPresent.isPresent()
                 && enemyPresent.get().getPosition().distance(ownSubmarine.getPosition()) > mapConfiguration.getTorpedoExplosionRadius()
                 && !friendPresent;
     }
@@ -111,16 +110,6 @@ public class SimpleGameLogic implements GameLogic {
         return response;
     }
 
-    private void shoot(World world, OwnSubmarine submarine) throws IOException {
-        SimpleResponse response = world.shoot(submarine, new ShootRequest(submarine.getAngle()));
-        viewModel.getCalls().add(new ApiCall(Api.SHOOT, submarine.getId(), response));
-    }
-
-    private void move(World world, OwnSubmarine submarine, double speedChange, double angle) throws IOException {
-        SimpleResponse response = world.move(submarine, new MoveRequest(speedChange, angle));
-        viewModel.getCalls().add(new ApiCall(Api.MOVE, submarine.getId(), response));
-    }
-
     private void handleSonarResponse(SonarResponse sonarResponse) {
         if (sonarResponse != null) {
             List<Entity> detectedSubmarines = sonarResponse.getEntities().stream()
@@ -138,8 +127,18 @@ public class SimpleGameLogic implements GameLogic {
                     .filter(entity -> entity.getType().equals(EntityType.Submarine)).collect(Collectors.toList())
                     .forEach(entity -> viewModel.getWorldMap().replaceCell(entity.getPosition(), entity));
         } else {
-            System.out.println("VALAMI HIBA VAN!!!");
+            System.out.println("VALAMI HIBA VAN!!! handleSonarResponse-ban");
         }
+    }
+
+    private void shoot(World world, OwnSubmarine submarine) throws IOException {
+        SimpleResponse response = world.shoot(submarine, new ShootRequest(submarine.getAngle()));
+        viewModel.getCalls().add(new ApiCall(Api.SHOOT, submarine.getId(), response));
+    }
+
+    private void move(World world, OwnSubmarine submarine, double speedChange, double angle) throws IOException {
+        SimpleResponse response = world.move(submarine, new MoveRequest(speedChange, angle));
+        viewModel.getCalls().add(new ApiCall(Api.MOVE, submarine.getId(), response));
     }
 
     private double avoidCollision(World world, OwnSubmarine submarine) {
@@ -195,7 +194,7 @@ public class SimpleGameLogic implements GameLogic {
             List<Long> ids = viewModel.getDetectedSubmarines().stream().map(e -> e.getId()).collect(Collectors.toList());
             if (ids.contains(desiredDestination.getTargetId())) {
                 desiredDestination = targetEnemy(submarine, find(viewModel.getDetectedSubmarines(), desiredDestination.getTargetId()));
-                return desiredDestination.getPosition();    
+                return desiredDestination.getPosition();
             }
         }
         Optional<Entity> closest = viewModel.getDetectedSubmarines().stream()
