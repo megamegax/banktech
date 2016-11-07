@@ -19,7 +19,8 @@ import java.util.stream.Stream;
 
 public class SubmarineControlPanelController implements Initializable {
     @FXML
-    AnchorPane wheel;
+    AnchorPane wheelContainer;
+    private Wheel wheel;
 
     @FXML
     Label submarineName;
@@ -32,7 +33,8 @@ public class SubmarineControlPanelController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        wheel.getChildren().add(new Wheel());
+        wheel = new Wheel();
+        wheelContainer.getChildren().add(wheel);
     }
 
     public SubmarineControlPanelController() {
@@ -58,5 +60,10 @@ public class SubmarineControlPanelController implements Initializable {
 
     public void refresh(OwnSubmarine submarine) {
         this.submarine = submarine;
+        Platform.runLater(() -> {
+            wheel.setDirection(submarine.getAngle());
+            submarineSpeedSlider.adjustValue(submarine.getVelocity());
+        });
+
     }
 }

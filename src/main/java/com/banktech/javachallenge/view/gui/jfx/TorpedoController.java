@@ -81,29 +81,34 @@ public class TorpedoController implements Initializable, GUIListener {
             refreshTurnNumber(model);
             if (submarineControlPanels.isEmpty()) {
                 addSubmarineControlPanels(model);
-
+            }
+            if (submarineControlPanels != null) {
                 submarineControlPanels.forEach(submarineControlPanel -> {
                     List<OwnSubmarine> ownSubmarines = model.getOwnSubmarines();
-                    if (ownSubmarines != null && !ownSubmarines.isEmpty()) {
-                        Optional<OwnSubmarine> submarine = ownSubmarines.stream()
-                                .filter(ownSubmarine -> ownSubmarine.getId().equals(submarineControlPanel.getSubmarineId())).findFirst();
+                    if (ownSubmarines != null && !ownSubmarines.isEmpty() && submarineControlPanel != null) {
+                        Long submarineId = submarineControlPanel.getSubmarineId();
+                        if (submarineId != null) {
+                            Optional<OwnSubmarine> submarine = ownSubmarines.stream().filter(ownSubmarine -> ownSubmarine.getId().equals(submarineId))
+                                    .findFirst();
 
-                        if (submarine.isPresent()) {
-                            submarineControlPanel.refresh(submarine.get());
+                            if (submarine.isPresent()) {
+                                submarineControlPanel.refresh(submarine.get());
+                            }
                         }
                     }
                 });
+
             }
         }
 
     }
 
     private void addSubmarineControlPanels(ViewModel model) {
-        for (OwnSubmarine submarine : model.getOwnSubmarines()) {
+        model.getOwnSubmarines().stream().filter(submarine -> submarine != null).forEach(submarine -> {
             SubmarineControlPanel panel = new SubmarineControlPanel(submarine, model);
             submarineControlPanels.add(panel.getController());
             Platform.runLater(() -> adminLayout.getChildren().add(panel));
-        }
+        });
     }
 
     private void refreshTurnNumber(ViewModel model) {

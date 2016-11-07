@@ -16,22 +16,20 @@ public class SubmarineControlPanel extends AnchorPane {
     SubmarineControlPanelController controller;
 
     public SubmarineControlPanel(OwnSubmarine submarine, ViewModel model) {
-        Platform.runLater(() -> {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/banktech/javachallenge/gui/jfx/component/submarine/SubmarineControlPanel.fxml"));
-            Pane panel = null;
-            try {
-                panel = loader.load();
-            } catch (IOException e) {
-                e.printStackTrace();
-                throw new RuntimeException(e);
-            }
+
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/banktech/javachallenge/gui/jfx/component/submarine/SubmarineControlPanel.fxml"));
+        try {
+            Pane panel = loader.load();
             controller = loader.getController();
             controller.setSubmarine(submarine);
             controller.setWorld(model.getWorldMap());
             controller.setGame(model.getGame());
+            Platform.runLater(() -> this.getChildren().add(panel));
 
-            this.getChildren().add(panel);
-        });
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
     }
 
     public SubmarineControlPanelController getController() {
