@@ -1,10 +1,10 @@
 package com.banktech.javachallenge.service.world;
 
+import com.banktech.javachallenge.service.domain.Island;
 import com.banktech.javachallenge.service.domain.Position;
+import com.banktech.javachallenge.service.domain.Torpedo;
 import com.banktech.javachallenge.service.domain.game.SimpleResponse;
 import com.banktech.javachallenge.service.domain.submarine.*;
-import com.banktech.javachallenge.service.domain.Island;
-import com.banktech.javachallenge.service.domain.Torpedo;
 
 import java.io.IOException;
 
@@ -28,7 +28,7 @@ public interface World {
      * @param submarine   {@link OwnSubmarine}
      * @param moveRequest {@link MoveRequest}
      */
-    SimpleResponse move(final OwnSubmarine submarine, final MoveRequest moveRequest) throws IOException;
+    SimpleResponse move(final OwnSubmarine submarine, final MoveRequest moveRequest);
 
     /**
      * Shoot with selected {@link OwnSubmarine}.
@@ -36,7 +36,7 @@ public interface World {
      * @param submarine    {@link OwnSubmarine}
      * @param shootRequest {@link ShootRequest}
      */
-    SimpleResponse shoot(final OwnSubmarine submarine, final ShootRequest shootRequest) throws IOException;
+    SimpleResponse shoot(final OwnSubmarine submarine, final ShootRequest shootRequest);
 
     /**
      * Gives back the width and height of the world.
@@ -52,7 +52,7 @@ public interface World {
      * @return {@link SonarResponse}
      * @throws IOException
      */
-    SonarResponse sonar(OwnSubmarine selectedSubmarine) throws IOException;
+    SonarResponse sonar(OwnSubmarine selectedSubmarine);
 
     /**
      * Extended sonar.
@@ -61,6 +61,6 @@ public interface World {
      * @return {@link SonarResponse}
      * @throws IOException
      */
-    SonarResponse extendedSonar(OwnSubmarine selectedSubmarine) throws IOException;
+    SonarResponse extendedSonar(OwnSubmarine selectedSubmarine);
 
 }

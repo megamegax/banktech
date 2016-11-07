@@ -1,12 +1,13 @@
 package com.banktech.javachallenge.logic;
 
+import com.banktech.javachallenge.service.domain.Position;
 import com.banktech.javachallenge.view.domain.ViewModel;
-
-import java.io.IOException;
 
 
 public interface GameLogic {
-    
-    ViewModel step(ViewModel currentViewModel) throws IOException;
+
+    ViewModel sonar(ViewModel currentViewModel, Long submarineId);
+
+    ViewModel step(ViewModel currentViewModel, Long submarineId,Position fallbackPosition);
 
 }

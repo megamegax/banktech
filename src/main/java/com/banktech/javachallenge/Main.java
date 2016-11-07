@@ -1,7 +1,5 @@
 package com.banktech.javachallenge;
 
-import java.io.IOException;
-
 import com.banktech.javachallenge.service.Api;
 import com.banktech.javachallenge.service.domain.game.CreateGameResponse;
 import com.banktech.javachallenge.view.gui.jfx.TorpedoController;
@@ -10,6 +8,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+
+import java.io.IOException;
 
 /**
  *
@@ -39,8 +39,8 @@ public class Main extends Application {
                 System.out.println("Game already running: " + runningGames.getGames().get(0));
                 gameRunner.joinGame(runningGames.getGames().get(0));
                 System.out.println("Joined to game: " + runningGames.getGames().get(0));
-                gameRunner.play();
                 System.out.println("Control added to GameRunner.");
+                gameRunner.play();
             }
         });
 

@@ -1,15 +1,14 @@
 package com.banktech.javachallenge.service.world;
 
 import com.banktech.javachallenge.service.Api;
+import com.banktech.javachallenge.service.domain.Island;
 import com.banktech.javachallenge.service.domain.Position;
+import com.banktech.javachallenge.service.domain.Torpedo;
 import com.banktech.javachallenge.service.domain.game.Game;
 import com.banktech.javachallenge.service.domain.game.SimpleResponse;
 import com.banktech.javachallenge.service.domain.submarine.*;
-import com.banktech.javachallenge.service.domain.Island;
-import com.banktech.javachallenge.service.domain.Torpedo;
 import retrofit2.Response;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -52,17 +51,17 @@ public class ClientWorld implements World {
      * @param moveRequest       {@link MoveRequest}
      */
     @Override
-    public SimpleResponse move(final OwnSubmarine selectedSubmarine, final MoveRequest moveRequest) throws IOException {
+    public SimpleResponse move(final OwnSubmarine selectedSubmarine, final MoveRequest moveRequest)  {
         //noinspection SuspiciousMethodCalls
         map.remove(selectedSubmarine);
         return delegateMovementToServer(moveRequest, selectedSubmarine);
     }
 
-    private SimpleResponse delegateMovementToServer(MoveRequest moveRequest, final Entity selectedSubmarine) throws IOException {
+    private SimpleResponse delegateMovementToServer(MoveRequest moveRequest, final Entity selectedSubmarine) {
         try {
             Response<SimpleResponse> response = Api.submarineService().move(gameId, selectedSubmarine.getId(), moveRequest).execute();
             return response.body();
-        } catch (NullPointerException e) {
+        } catch (Exception e) {
             return new SonarResponse("Timeout", 400);
         }
     }
@@ -74,43 +73,43 @@ public class ClientWorld implements World {
      * @param shootRequest      {@link ShootRequest}
      */
     @Override
-    public SimpleResponse shoot(OwnSubmarine selectedSubmarine, ShootRequest shootRequest) throws IOException {
+    public SimpleResponse shoot(OwnSubmarine selectedSubmarine, ShootRequest shootRequest) {
         return delegateShootToServer(shootRequest, selectedSubmarine);
     }
 
     @Override
-    public SonarResponse sonar(OwnSubmarine selectedSubmarine) throws IOException {
+    public SonarResponse sonar(OwnSubmarine selectedSubmarine)  {
         return delegateSonarToServer(selectedSubmarine);
     }
 
-    private SonarResponse delegateSonarToServer(Entity selectedSubmarine) throws IOException {
+    private SonarResponse delegateSonarToServer(Entity selectedSubmarine) {
         try {
             Response<SonarResponse> response = Api.submarineService().sonar(gameId, selectedSubmarine.getId()).execute();
             return response.body();
-        } catch (NullPointerException e) {
+        } catch (Exception e) {
             return new SonarResponse("Timeout", 400);
         }
     }
 
     @Override
-    public SonarResponse extendedSonar(OwnSubmarine selectedSubmarine) throws IOException {
+    public SonarResponse extendedSonar(OwnSubmarine selectedSubmarine){
         return delegateExtendedSonarToServer(selectedSubmarine);
     }
 
-    private SonarResponse delegateExtendedSonarToServer(Entity selectedSubmarine) throws IOException {
+    private SonarResponse delegateExtendedSonarToServer(Entity selectedSubmarine) {
         try {
             Response<SonarResponse> response = Api.submarineService().extendSonar(gameId, selectedSubmarine.getId()).execute();
             return response.body();
-        } catch (NullPointerException e) {
+        } catch (Exception e) {
             return new SonarResponse("Timeout", 400);
         }
     }
 
-    private SimpleResponse delegateShootToServer(ShootRequest shootRequest, Entity selectedSubmarine) throws IOException {
+    private SimpleResponse delegateShootToServer(ShootRequest shootRequest, Entity selectedSubmarine){
         try {
             Response<SimpleResponse> response = Api.submarineService().shoot(gameId, selectedSubmarine.getId(), shootRequest).execute();
             return response.body();
-        } catch (NullPointerException e) {
+        } catch (Exception e) {
             return new SimpleResponse("Timeout", 400);
         }
     }

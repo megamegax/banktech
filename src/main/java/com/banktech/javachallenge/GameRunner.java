@@ -1,8 +1,9 @@
 package com.banktech.javachallenge;
 
+import com.banktech.javachallenge.logic.ExtendedGameLogic;
 import com.banktech.javachallenge.logic.GameLogic;
-import com.banktech.javachallenge.logic.SimpleGameLogic;
 import com.banktech.javachallenge.service.Api;
+import com.banktech.javachallenge.service.domain.Position;
 import com.banktech.javachallenge.service.domain.game.*;
 import com.banktech.javachallenge.service.domain.submarine.OwnSubmarine;
 import com.banktech.javachallenge.service.domain.submarine.SubmarineResponse;
@@ -24,7 +25,8 @@ public class GameRunner {
     private GUIListener listener;
     private long gameId;
     private int localRound;
-    private GameLogic gameLogic = new SimpleGameLogic();
+    private GameLogic firstGameLogic = new ExtendedGameLogic();
+    private GameLogic extendedGameLogic = new ExtendedGameLogic();
 
     GameRunner(GUIListener listener) {
         this.listener = listener;
@@ -91,7 +93,7 @@ public class GameRunner {
         Response<CreateGameResponse> response = null;
         try {
             response = Api.gameService().createGame().execute();
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         handleConnectionErrors(response);
@@ -119,7 +121,7 @@ public class GameRunner {
         Response<SimpleResponse> response = null;
         try {
             response = Api.gameService().joinGame(gameId).execute();
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         handleConnectionErrors(response);
@@ -128,35 +130,31 @@ public class GameRunner {
             SimpleResponse simpleResponse = response.body();
             ApiCall apiCall = new ApiCall(Api.JOIN_GAME, gameId, simpleResponse);
             refreshCallHistory(apiCall);
-            loadGameInfo(gameId, game -> refreshGui());
-
+            loadGameInfo(gameId);
+            refreshGui();
         }
     }
 
-    private void loadGameInfo(Long gameId, Consumer<Game> consumer) {
-        Api.gameService().gameInfo(gameId).enqueue(new Callback<GameInfoResponse>() {
-            @Override
-            public void onResponse(Call<GameInfoResponse> call, Response<GameInfoResponse> response) {
-                if (response.isSuccessful()) {
-                    handleConnectionErrors(response);
-                    if (response.body() != null) {
-                        GameInfoResponse gameInfo = response.body();
-                        getCurrentViewModel().setGame(gameInfo.getGame());
-                        SimpleResponse simpleResponse = new SimpleResponse(gameInfo.getMessage(), gameInfo.getCode());
-                        ApiCall apiCall = new ApiCall(Api.LOAD_GAME_INFO, gameId, simpleResponse);
-                        refreshCallHistory(apiCall);
-                        consumer.accept(gameInfo.getGame());
-                        getCurrentViewModel().setWorldMap(new ClientWorld(gameInfo.getGame()));
-                    }
+    private Game loadGameInfo(Long gameId) {
+        try {
+            Response<GameInfoResponse> response = Api.gameService().gameInfo(gameId).execute();
+            if (response.isSuccessful()) {
+                handleConnectionErrors(response);
+                if (response.body() != null) {
+                    GameInfoResponse gameInfo = response.body();
+                    getCurrentViewModel().setGame(gameInfo.getGame());
+                    SimpleResponse simpleResponse = new SimpleResponse(gameInfo.getMessage(), gameInfo.getCode());
+                    ApiCall apiCall = new ApiCall(Api.LOAD_GAME_INFO, gameId, simpleResponse);
+                    refreshCallHistory(apiCall);
+                    getCurrentViewModel().setWorldMap(new ClientWorld(gameInfo.getGame()));
+                    return gameInfo.getGame();
                 }
             }
+        } catch (Exception e) {
+            e.printStackTrace();
 
-            @Override
-            public void onFailure(Call<GameInfoResponse> call, Throwable throwable) {
-                throwable.printStackTrace();
-            }
-        });
-
+        }
+        return null;
     }
 
     private void printLogs() {
@@ -166,42 +164,64 @@ public class GameRunner {
     }
 
     void play() {
-        loadGameInfo(gameId, (game) -> {
-            final boolean[] alreadyUsedTurn = {false};
-            final boolean[] finish = {false};
-            while (!finish[0]) {
-                loadGameInfo(gameId, (newGame -> {
-                    if (newGame.getStatus().equals(Status.ENDED)) {
-                        System.out.println(newGame);
-                        finish[0] = true;
-                    }
-                    if (isNextTurn(newGame)) {
-                        incTurn();
-                        alreadyUsedTurn[0] = false;
-                    }
-                    if (!alreadyUsedTurn[0]) {
-                        try {
-                            if (getLastTurnNumber() < 151) {
-                                loadOwnSubmarines();
-                            }
-                            alreadyUsedTurn[0] = true;
-                            ViewModel updatedViewModel = gameLogic.step(getCurrentViewModel());
-                            turns.set(getLastTurnNumber(), updatedViewModel);
-                        } catch (Exception e) {
-                            e.printStackTrace();
+        boolean alreadyUsedTurn = false;
+        Game game = loadGameInfo(gameId);
+        if (game != null) {
+            System.out.println("Waiting for players to join...");
+            while (game.getStatus().equals(Status.WAITING)) {
+                System.out.println("waiting");
+            }
+            while (!game.getStatus().equals(Status.ENDED)) {
+                if (isNextTurn(game)) {
+                    incTurn();
+                    alreadyUsedTurn = false;
+                }
+                if (!alreadyUsedTurn) {
+                    try {
+                        if (getLastTurnNumber() < game.getMapConfiguration().getRounds()) {
+                            loadOwnSubmarines();
                         }
-                        printLogs();
+                        alreadyUsedTurn = true;
+
+                        //  turns.set(getLastTurnNumber(), firstGameLogic.sonar(getCurrentViewModel(), getCurrentViewModel().getOwnSubmarines().get(0).getId()));
+                        //    turns.set(getLastTurnNumber(), firstGameLogic.step(getCurrentViewModel(), getCurrentViewModel().getOwnSubmarines().get(0).getId(), );
+                        //     turns.set(getLastTurnNumber(), extendedGameLogic.sonar(getCurrentViewModel(), getCurrentViewModel().getOwnSubmarines().get(1).getId()));
+                        //    turns.set(getLastTurnNumber(), extendedGameLogic.step(getCurrentViewModel(), getCurrentViewModel().getOwnSubmarines().get(1).getId(), ));
+
+
+
+                    /*    getCurrentViewModel().getOwnSubmarines().forEach(submarine ->
+                                turns.set(getLastTurnNumber(), extendedGameLogic.sonar(getCurrentViewModel(), submarine.getId())));
+*/
+                        List<Position> fallbackPositions = new ArrayList<>(2);
+                        fallbackPositions.add(new Position(game.getMapConfiguration().getWidth() - 10, game.getMapConfiguration().getHeight() / 2));
+                        fallbackPositions.add(new Position(10, game.getMapConfiguration().getHeight() / 2));
+                        int index = 0;
+                        for (OwnSubmarine submarine : getCurrentViewModel().getOwnSubmarines()) {
+                            ViewModel model = extendedGameLogic.step(getCurrentViewModel(), submarine.getId(), fallbackPositions.get(index));
+                            turns.set(getLastTurnNumber(), model);
+                            refreshGui();
+                            index++;
+                        }
+
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
-                }));
+                    printLogs();
+                }
                 try {
-                    Thread.sleep(900);
+                    Thread.sleep(800);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
+                game = loadGameInfo(gameId);
             }
-            System.out.println("Játék vége!");
-            turns.get(turns.size() - 1).getCalls().add(new ApiCall("End of Game", "-", new SimpleResponse()));
-        });
+
+
+        }
+        System.out.println("Játék vége!");
+        getCurrentViewModel().getCalls().add(new ApiCall("End of Game", "-", new SimpleResponse()));
 
     }
 
@@ -220,10 +240,10 @@ public class GameRunner {
                 SimpleResponse simpleResponse = new SimpleResponse(response.body().getMessage(), response.body().getCode());
                 ApiCall apiCall = new ApiCall(Api.LOAD_OWN_SUBMARINES, gameId, simpleResponse);
                 refreshCallHistory(apiCall);
-                if(submarines != null)
-                submarines.forEach(ownSubmarine ->
-                        getCurrentViewModel().getWorldMap().replaceCell(ownSubmarine.getPosition(), ownSubmarine)
-                );
+                if (submarines != null)
+                    submarines.forEach(ownSubmarine ->
+                            getCurrentViewModel().getWorldMap().replaceCell(ownSubmarine.getPosition(), ownSubmarine)
+                    );
                 getCurrentViewModel().setOwnSubmarines(submarines);
             }
         }

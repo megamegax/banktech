@@ -1,15 +1,14 @@
 package com.banktech.javachallenge.service.world;
 
+import com.banktech.javachallenge.service.domain.Island;
 import com.banktech.javachallenge.service.domain.Position;
+import com.banktech.javachallenge.service.domain.Torpedo;
 import com.banktech.javachallenge.service.domain.game.SimpleResponse;
 import com.banktech.javachallenge.service.domain.submarine.MoveRequest;
 import com.banktech.javachallenge.service.domain.submarine.OwnSubmarine;
 import com.banktech.javachallenge.service.domain.submarine.ShootRequest;
 import com.banktech.javachallenge.service.domain.submarine.SonarResponse;
-import com.banktech.javachallenge.service.domain.Island;
-import com.banktech.javachallenge.service.domain.Torpedo;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -86,12 +85,12 @@ public class ServerWorld implements World {
     }
 
     @Override
-    public SonarResponse sonar(OwnSubmarine selectedSubmarine) throws IOException {
+    public SonarResponse sonar(OwnSubmarine selectedSubmarine)  {
         throw new UnsupportedOperationException();
     }
     
     @Override
-    public SonarResponse extendedSonar(OwnSubmarine selectedSubmarine) throws IOException {
+    public SonarResponse extendedSonar(OwnSubmarine selectedSubmarine) {
         throw new UnsupportedOperationException();
     }
     

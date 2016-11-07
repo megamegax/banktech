@@ -1,6 +1,9 @@
 package com.banktech.javachallenge.service.domain;
 
 import com.banktech.javachallenge.service.domain.game.MapConfiguration;
+import com.banktech.javachallenge.service.domain.submarine.OwnSubmarine;
+
+import java.util.List;
 
 public class Position {
     private Double x;
@@ -54,6 +57,18 @@ public class Position {
         return false;
     }
 
+    public boolean otherSubmarine(MapConfiguration mapConfiguration,List<OwnSubmarine> submarines, Long currentSubmarineId) {
+        for (OwnSubmarine submarine : submarines) {
+            if (!submarine.getId().equals(currentSubmarineId)) {
+                Position submarinePosition = submarine.getPosition();
+                if (submarinePosition.distance(this) <= mapConfiguration.getTorpedoExplosionRadius()) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     public double distance(Position position) {
         return Math.sqrt(Math.pow(position.x - x, 2) + Math.pow(position.y - y, 2));
     }
@@ -100,5 +115,5 @@ public class Position {
         return true;
     }
 
-    
+
 }

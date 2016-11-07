@@ -1,11 +1,11 @@
 package com.banktech.javachallenge.view.gui.jfx.component.map;
 
 import com.banktech.javachallenge.service.domain.Position;
+import com.banktech.javachallenge.service.domain.Torpedo;
 import com.banktech.javachallenge.service.domain.submarine.Entity;
 import com.banktech.javachallenge.service.domain.submarine.OwnSubmarine;
 import com.banktech.javachallenge.view.domain.ViewModel;
 import com.banktech.javachallenge.view.gui.MapUtil;
-import com.banktech.javachallenge.service.domain.Torpedo;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
@@ -27,6 +27,7 @@ public class MapCanvas extends javafx.scene.canvas.Canvas {
     }
 
     private void paintComponent(GraphicsContext g) {
+        g.clearRect(0,0,getWidth(),getHeight());
         g.setStroke(Color.GRAY);
         g.setFill(Color.ALICEBLUE);
         g.strokeRect(0, 0, getWidth(), getHeight());

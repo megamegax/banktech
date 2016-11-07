@@ -12,13 +12,10 @@ import com.banktech.javachallenge.service.world.World;
 import com.banktech.javachallenge.view.domain.ApiCall;
 import com.banktech.javachallenge.view.domain.ViewModel;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
-public class SimpleGameLogic implements GameLogic {
+public class ExtendedGameLogic implements GameLogic {
     private ViewModel viewModel;
     private MapConfiguration mapConfiguration;
     private Map<Long, Target> submarineDesiredDestination = new HashMap<>();
@@ -63,7 +60,7 @@ public class SimpleGameLogic implements GameLogic {
                 shoot(world, submarine);
             }
         }
-        double angle = avoidCollision(world, submarine);
+        double angle = avoidCollision(submarine);
         move(world, submarine, speedChange, angle);
     }
 
@@ -88,7 +85,7 @@ public class SimpleGameLogic implements GameLogic {
         Optional<Entity> enemyPresent = viewModel.getDetectedSubmarines().stream()
                 .filter(e -> close(projectedLocations, e))
                 .findAny();
-        return enemyPresent.isPresent() && enemyPresent.get().getPosition().distance(ownSubmarine.getPosition()) < mapConfiguration.getTorpedoExplosionRadius();
+        return enemyPresent.isPresent() && enemyPresent.get().getPosition().distance(ownSubmarine.getPosition()) < mapConfiguration.getTorpedoExplosionRadius()*4;
     }
 
     private boolean close(List<ProjectedPosition> projectedLocations, Entity e) {
@@ -123,12 +120,12 @@ public class SimpleGameLogic implements GameLogic {
             List<Entity> detectedSubmarines = sonarResponse.getEntities().stream()
                     .filter(entity -> !entity.getOwner().getName().equals(Main.ourTeamName()))
                     .filter(entity -> entity.getType().equals(EntityType.Submarine)).collect(Collectors.toList());
-            viewModel.setDetectedSubmarines(detectedSubmarines);
+            viewModel.getDetectedSubmarines().addAll(detectedSubmarines);
 
             List<Entity> detectedTorpedos = sonarResponse.getEntities().stream()
                     .filter(entity -> entity.getType().equals(EntityType.Torpedo)).collect(Collectors.toList());
 
-            viewModel.setDetectedTorpedos(detectedTorpedos);
+            viewModel.getDetectedTorpedos().addAll(detectedTorpedos);
 
             sonarResponse.getEntities().stream()
                     .filter(entity -> entity.getOwner().getName().equals(Main.ourTeamName()))
@@ -149,7 +146,7 @@ public class SimpleGameLogic implements GameLogic {
         viewModel.getCalls().add(new ApiCall(Api.MOVE, submarine.getId(), response));
     }
 
-    private double avoidCollision(World world, OwnSubmarine submarine) {
+    private double avoidCollision(OwnSubmarine submarine) {
         Position newDestination = getDesiredDestination(submarine);
         double angle = submarine.getPosition().angleTo(newDestination);
         double adjustedAngle = adjustAngleObstacle(submarine, angle);
@@ -174,7 +171,7 @@ public class SimpleGameLogic implements GameLogic {
         int tries = 0;
         double adjustedAngle = angle;
         List<ProjectedPosition> projectedLocations = submarine.pathInRounds(10, adjustedAngle);
-        while (offWater(projectedLocations) && tries++ < 180) {
+        while (offWater(projectedLocations, submarine.getId()) && tries++ < 180) {
             adjustedAngle += adjust;
             projectedLocations = submarine.pathInRounds(10, adjustedAngle);
         }
@@ -230,17 +227,17 @@ public class SimpleGameLogic implements GameLogic {
         return desiredDestination;
     }
 
-    private boolean offWater(List<ProjectedPosition> projectedLocations) {
+    private boolean offWater(List<ProjectedPosition> projectedLocations, Long currentSubmarineId) {
         for (ProjectedPosition position : projectedLocations) {
-            if (offWater(position.getPosition())) {
+            if (offWater(position.getPosition(), currentSubmarineId)) {
                 return true;
             }
         }
         return false;
     }
 
-    private boolean offWater(Position projectedLocation) {
-        return projectedLocation.outSide(mapConfiguration) || projectedLocation.island(mapConfiguration);
+    private boolean offWater(Position projectedLocation, Long currentSubmarineId) {
+        return projectedLocation.outSide(mapConfiguration) || projectedLocation.island(mapConfiguration) || projectedLocation.otherSubmarine(mapConfiguration, viewModel.getOwnSubmarines(), currentSubmarineId);
     }
 
     private double maxAcceleration(OwnSubmarine submarine) {
@@ -252,11 +249,18 @@ public class SimpleGameLogic implements GameLogic {
     }
 
     private double slowDown(OwnSubmarine submarine) {
-        double speedChange = 0;
-        if (submarine.getVelocity() < mapConfiguration.getMaxSpeed()) {
-            speedChange = Math.min(submarine.getVelocity() / 2, mapConfiguration.getMaxAccelerationPerRound());
-        }
-        return speedChange;
+        return -mapConfiguration.getMaxAccelerationPerRound();
     }
 
+    public Position getNewRandomPosition() {
+        Random rnd = new Random();
+        Position randomPosition;
+        do {
+            double x = rnd.nextInt(mapConfiguration.getWidth());
+            double y = rnd.nextInt(mapConfiguration.getHeight());
+            randomPosition = new Position(x, y);
+
+        } while ((randomPosition.island(mapConfiguration) || randomPosition.outSide(mapConfiguration)));
+        return randomPosition;
+    }
 }
