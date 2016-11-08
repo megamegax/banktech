@@ -171,7 +171,16 @@ public class ExtendedGameLogic implements GameLogic {
     }
 
     private void shoot(World world, OwnSubmarine submarine, Position enemyPosition) {
-        SimpleResponse response = world.shoot(submarine, new ShootRequest(submarine.getPosition().angleTo(enemyPosition)));
+        Double shootAngle = submarine.getPosition().angleTo(enemyPosition);
+        //Nem változtatott a végeredményen.
+        if (shootAngle < 0) {
+            shootAngle = 360 - shootAngle;
+        }
+        /* 200-al kevesebb pontot ért.
+        if (shootAngle > 360) {
+            shootAngle = shootAngle - 360;
+        }*/
+        SimpleResponse response = world.shoot(submarine, new ShootRequest(shootAngle));
         viewModel.getCalls().add(new ApiCall(Api.SHOOT, submarine.getId(), response));
     }
 
