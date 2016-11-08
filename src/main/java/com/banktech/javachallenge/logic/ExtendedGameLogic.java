@@ -63,20 +63,32 @@ public class ExtendedGameLogic implements GameLogic {
             if (tooCloseEnemy(submarine, projectedLocations)) {
                 speedChange = slowDown(submarine);
             }
-            if (closeEnemy(submarine, projectedLocations)) {
+           /* if (closeEnemy(submarine, projectedLocations)) {
                 shoot(world, submarine, calculateWhereToShoot(submarine));
-            }
+            }*/
+           if(visibleEnemy(submarine)){
+               shoot(world, submarine, calculateWhereToShoot(submarine));
+
+           }
         }
         double angle = avoidCollision(submarine);
         move(world, submarine, speedChange, angle);
     }
 
+    private boolean visibleEnemy(OwnSubmarine submarine){
+        Optional<Entity> possibleEnemy = viewModel.getDetectedSubmarines().stream()
+                .min((a, b) -> Double.compare(a.getPosition().distance(submarine.getPosition()), b.getPosition().distance(submarine.getPosition())));
+        return possibleEnemy.isPresent();
+    }
     private Position calculateWhereToShoot(OwnSubmarine submarine) {
-
+/*
         Optional<Entity> possibleEnemy = viewModel.getDetectedSubmarines().stream().filter(entity -> !entity.getOwner().getName().equals(Main.ourTeamName()))
                 .filter(entity -> entity.getType().equals(EntityType.Submarine))
                 .sorted((o1, o2) -> ((Double) o1.getPosition().distance(submarine.getPosition())).compareTo(o2.getPosition().distance(submarine.getPosition())))
                 .findFirst();
+  */
+        Optional<Entity> possibleEnemy = viewModel.getDetectedSubmarines().stream()
+                .min((a, b) -> Double.compare(a.getPosition().distance(submarine.getPosition()), b.getPosition().distance(submarine.getPosition())));
         if (possibleEnemy.isPresent()) {
             Double distance = possibleEnemy.get().getPosition().distance(submarine.getPosition());
             double roundToHit = distance / viewModel.getGame().getMapConfiguration().getTorpedoSpeed();
@@ -102,7 +114,7 @@ public class ExtendedGameLogic implements GameLogic {
         boolean friendPresent = viewModel.getOwnSubmarines().stream().filter(e -> !e.getId().equals(ownSubmarine.getId()))
                 .filter(e -> close(projectedLocations, e)).findAny().isPresent();
         return enemyPresent.isPresent()
-                && enemyPresent.get().getPosition().distance(ownSubmarine.getPosition()) > mapConfiguration.getTorpedoExplosionRadius() / 1.5;
+                && enemyPresent.get().getPosition().distance(ownSubmarine.getPosition()) > mapConfiguration.getTorpedoExplosionRadius() / 1.5 && friendPresent;
     }
 
     private boolean tooCloseEnemy(OwnSubmarine ownSubmarine, List<ProjectedPosition> projectedLocations) {
@@ -259,8 +271,8 @@ public class ExtendedGameLogic implements GameLogic {
     }
 
     private boolean offWater(Position projectedLocation, Long currentSubmarineId) {
-        return projectedLocation.outSide(mapConfiguration) || projectedLocation.island(mapConfiguration);
-              //  || projectedLocation.otherSubmarine(mapConfiguration, viewModel.getOwnSubmarines(), currentSubmarineId);
+        return projectedLocation.outSide(mapConfiguration) || projectedLocation.island(mapConfiguration)
+                || projectedLocation.otherSubmarine(mapConfiguration, viewModel.getOwnSubmarines(), currentSubmarineId);
     }
 
     private double maxAcceleration(OwnSubmarine submarine) {

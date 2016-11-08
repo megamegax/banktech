@@ -2,7 +2,6 @@ package com.banktech.javachallenge.service.domain;
 
 import com.banktech.javachallenge.service.domain.game.MapConfiguration;
 import com.banktech.javachallenge.service.domain.submarine.OwnSubmarine;
-import com.sun.javafx.geom.Vec2d;
 
 import java.util.List;
 
@@ -62,7 +61,7 @@ public class Position {
         for (OwnSubmarine submarine : submarines) {
             if (!submarine.getId().equals(currentSubmarineId)) {
                 Position submarinePosition = submarine.getPosition();
-                if (submarinePosition.distance(this) <= mapConfiguration.getTorpedoExplosionRadius()) {
+                if (submarinePosition.distance(this) <= mapConfiguration.getTorpedoExplosionRadius()*4) {
                     return true;
                 }
             }
