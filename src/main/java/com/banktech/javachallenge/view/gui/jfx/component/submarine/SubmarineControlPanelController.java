@@ -77,7 +77,7 @@ public class SubmarineControlPanelController implements Initializable {
         this.submarine = submarine;
         Platform.runLater(() -> {
             wheel.setDirection(submarine.getAngle());
-            submarineSpeedSlider.adjustValue(submarine.getVelocity());
+            submarineSpeedSlider.adjustValue((submarine.getVelocity()/game.getMapConfiguration().getMaxSpeed())*100);
             calculateTorpedoCooldown();
             calculateExtendedSonarCooldown();
             calculateHp();

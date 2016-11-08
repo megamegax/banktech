@@ -2,6 +2,7 @@ package com.banktech.javachallenge.service.domain;
 
 import com.banktech.javachallenge.service.domain.game.MapConfiguration;
 import com.banktech.javachallenge.service.domain.submarine.OwnSubmarine;
+import com.sun.javafx.geom.Vec2d;
 
 import java.util.List;
 
@@ -57,7 +58,7 @@ public class Position {
         return false;
     }
 
-    public boolean otherSubmarine(MapConfiguration mapConfiguration,List<OwnSubmarine> submarines, Long currentSubmarineId) {
+    public boolean otherSubmarine(MapConfiguration mapConfiguration, List<OwnSubmarine> submarines, Long currentSubmarineId) {
         for (OwnSubmarine submarine : submarines) {
             if (!submarine.getId().equals(currentSubmarineId)) {
                 Position submarinePosition = submarine.getPosition();
@@ -115,5 +116,9 @@ public class Position {
         return true;
     }
 
-
+    public void move(Double velocity, Double angle) {
+        Position v = new Position(velocity * Math.cos(angle), velocity * Math.sin(angle));
+        x = x + v.getX();
+        y = y + v.getY();
+    }
 }
