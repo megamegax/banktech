@@ -194,8 +194,8 @@ public class GameRunner {
                                 turns.set(getLastTurnNumber(), extendedGameLogic.sonar(getCurrentViewModel(), submarine.getId())));
 */
                         List<Position> fallbackPositions = new ArrayList<>(2);
-                        fallbackPositions.add(new Position(game.getMapConfiguration().getWidth() - 10, game.getMapConfiguration().getHeight() / 2));
-                        fallbackPositions.add(new Position(10, game.getMapConfiguration().getHeight() / 2));
+                        fallbackPositions.add(new Position(game.getMapConfiguration().getWidth() - 100, game.getMapConfiguration().getHeight() / 2));
+                        fallbackPositions.add(new Position(100, game.getMapConfiguration().getHeight() / 2));
                         int index = 0;
                         for (OwnSubmarine submarine : getCurrentViewModel().getOwnSubmarines()) {
                             ViewModel model = extendedGameLogic.step(getCurrentViewModel(), submarine.getId(), fallbackPositions.get(index));

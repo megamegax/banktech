@@ -11,7 +11,6 @@ import com.banktech.javachallenge.service.domain.submarine.*;
 import com.banktech.javachallenge.service.world.World;
 import com.banktech.javachallenge.view.domain.ApiCall;
 import com.banktech.javachallenge.view.domain.ViewModel;
-import com.banktech.javachallenge.view.gui.MapUtil;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -33,11 +32,15 @@ public class ExtendedGameLogic implements GameLogic {
     @Override
     public synchronized ViewModel step(ViewModel currentViewModel, Long submarineId, Position fallbackPosition) {
         fillAttributes(currentViewModel);
+        List<Entity> savedSubmarines = new ArrayList<>();
+        savedSubmarines.addAll(viewModel.getDetectedSubmarines());
+        viewModel.getDetectedSubmarines().clear();
         this.fallbackPosition = fallbackPosition;
         currentViewModel.getOwnSubmarines().stream().filter(submarine -> submarine.getId().equals(submarineId))
                 .forEach(submarine -> handleSonar(currentViewModel.getWorldMap(), submarine));
         currentViewModel.getOwnSubmarines().stream().filter(submarine -> submarine.getId().equals(submarineId))
                 .forEach(submarine -> handleSubmarineMove(currentViewModel.getWorldMap(), submarine));
+        viewModel.getDetectedSubmarines().addAll(savedSubmarines);
         return viewModel;
     }
 
@@ -76,8 +79,8 @@ public class ExtendedGameLogic implements GameLogic {
                 .findFirst();
         if (possibleEnemy.isPresent()) {
             Double distance = possibleEnemy.get().getPosition().distance(submarine.getPosition());
-            double roundToHit = distance % viewModel.getGame().getMapConfiguration().getTorpedoSpeed();
-            simulatePosition(possibleEnemy.get(), roundToHit);
+            double roundToHit = distance / viewModel.getGame().getMapConfiguration().getTorpedoSpeed();
+           return simulatePosition(possibleEnemy.get(), roundToHit);
         }
         return null;
     }
@@ -255,8 +258,8 @@ public class ExtendedGameLogic implements GameLogic {
     }
 
     private boolean offWater(Position projectedLocation, Long currentSubmarineId) {
-        return projectedLocation.outSide(mapConfiguration) || projectedLocation.island(mapConfiguration)
-                || projectedLocation.otherSubmarine(mapConfiguration, viewModel.getOwnSubmarines(), currentSubmarineId);
+        return projectedLocation.outSide(mapConfiguration) || projectedLocation.island(mapConfiguration);
+              //  || projectedLocation.otherSubmarine(mapConfiguration, viewModel.getOwnSubmarines(), currentSubmarineId);
     }
 
     private double maxAcceleration(OwnSubmarine submarine) {
