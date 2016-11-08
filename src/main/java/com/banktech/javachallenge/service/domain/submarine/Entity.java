@@ -1,11 +1,11 @@
 package com.banktech.javachallenge.service.domain.submarine;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.banktech.javachallenge.service.domain.Position;
 import com.banktech.javachallenge.service.domain.ProjectedPosition;
 import com.banktech.javachallenge.view.gui.MapUtil;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Entity {
     protected EntityType type;
@@ -98,30 +98,18 @@ public class Entity {
 
     @Override
     public String toString() {
-        return "Submarine{" + "type='" + type + '\'' + ", id=" + id + ", position=" + position + ", owner=" + owner + ", velocity=" + velocity
+        return "Entity{" + "type='" + type + '\'' + ", id=" + id + ", position=" + position + ", owner=" + owner + ", velocity=" + velocity
                 + ", angle=" + angle + '}';
     }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o)
-            return true;
-        if (!(o instanceof Entity))
-            return false;
+        if (this == o) return true;
+        if (!(o instanceof Entity)) return false;
 
-        Entity submarine = (Entity) o;
+        Entity entity = (Entity) o;
 
-        if (getType() != null ? !getType().equals(submarine.getType()) : submarine.getType() != null)
-            return false;
-        if (getId() != null ? !getId().equals(submarine.getId()) : submarine.getId() != null)
-            return false;
-        if (getPosition() != null ? !getPosition().equals(submarine.getPosition()) : submarine.getPosition() != null)
-            return false;
-        if (getOwner() != null ? !getOwner().equals(submarine.getOwner()) : submarine.getOwner() != null)
-            return false;
-        if (getVelocity() != null ? !getVelocity().equals(submarine.getVelocity()) : submarine.getVelocity() != null)
-            return false;
-        return getAngle() != null ? getAngle().equals(submarine.getAngle()) : submarine.getAngle() == null;
+        return getId().equals(entity.getId());
 
     }
 

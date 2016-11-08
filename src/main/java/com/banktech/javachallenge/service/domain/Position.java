@@ -61,7 +61,7 @@ public class Position {
         for (OwnSubmarine submarine : submarines) {
             if (!submarine.getId().equals(currentSubmarineId)) {
                 Position submarinePosition = submarine.getPosition();
-                if (submarinePosition.distance(this) <= mapConfiguration.getTorpedoExplosionRadius()*4) {
+                if (submarinePosition.distance(this) <= mapConfiguration.getTorpedoExplosionRadius()*2) {
                     return true;
                 }
             }
@@ -116,7 +116,7 @@ public class Position {
     }
 
     public void move(Double velocity, Double angle) {
-        Position v = new Position(velocity * Math.cos(angle), velocity * Math.sin(angle));
+        Position v = new Position(velocity * Math.cos(Math.toRadians(angle)), velocity * Math.sin(Math.toRadians(angle)));
         x = x + v.getX();
         y = y + v.getY();
     }

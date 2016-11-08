@@ -51,7 +51,7 @@ public class ClientWorld implements World {
      * @param moveRequest       {@link MoveRequest}
      */
     @Override
-    public SimpleResponse move(final OwnSubmarine selectedSubmarine, final MoveRequest moveRequest)  {
+    public SimpleResponse move(final OwnSubmarine selectedSubmarine, final MoveRequest moveRequest) {
         //noinspection SuspiciousMethodCalls
         map.remove(selectedSubmarine);
         return delegateMovementToServer(moveRequest, selectedSubmarine);
@@ -77,8 +77,28 @@ public class ClientWorld implements World {
         return delegateShootToServer(shootRequest, selectedSubmarine);
     }
 
+    private SimpleResponse delegateShootToServer(ShootRequest shootRequest, Entity selectedSubmarine) {
+        try {
+            System.out.println("lövés!");
+            System.out.println("gameID:" + gameId);
+            System.out.println("SelectedSubmarineId: " + selectedSubmarine.getId());
+            System.out.println(shootRequest);
+            Response<SimpleResponse> response = Api.submarineService().shoot(gameId, selectedSubmarine.getId(), shootRequest).execute();
+
+            if (response.isSuccessful())
+                System.out.println(response.body());
+            else System.out.println(response.errorBody());
+
+            System.out.println(response.message());
+            return response.body();
+        } catch (Exception e) {
+            return new SimpleResponse("Timeout", 400);
+        }
+    }
+
+
     @Override
-    public SonarResponse sonar(OwnSubmarine selectedSubmarine)  {
+    public SonarResponse sonar(OwnSubmarine selectedSubmarine) {
         return delegateSonarToServer(selectedSubmarine);
     }
 
@@ -92,7 +112,7 @@ public class ClientWorld implements World {
     }
 
     @Override
-    public SonarResponse extendedSonar(OwnSubmarine selectedSubmarine){
+    public SonarResponse extendedSonar(OwnSubmarine selectedSubmarine) {
         return delegateExtendedSonarToServer(selectedSubmarine);
     }
 
@@ -101,16 +121,8 @@ public class ClientWorld implements World {
             Response<SonarResponse> response = Api.submarineService().extendSonar(gameId, selectedSubmarine.getId()).execute();
             return response.body();
         } catch (Exception e) {
-            return new SonarResponse("Timeout", 400);
-        }
-    }
 
-    private SimpleResponse delegateShootToServer(ShootRequest shootRequest, Entity selectedSubmarine){
-        try {
-            Response<SimpleResponse> response = Api.submarineService().shoot(gameId, selectedSubmarine.getId(), shootRequest).execute();
-            return response.body();
-        } catch (Exception e) {
-            return new SimpleResponse("Timeout", 400);
+            return new SonarResponse("Timeout", 400);
         }
     }
 

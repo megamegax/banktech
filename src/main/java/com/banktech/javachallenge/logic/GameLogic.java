@@ -8,6 +8,6 @@ public interface GameLogic {
 
     ViewModel sonar(ViewModel currentViewModel, Long submarineId);
 
-    ViewModel step(ViewModel currentViewModel, Long submarineId,Position fallbackPosition);
+    ViewModel step(ViewModel currentViewModel, Long submarineId,Position fallbackPosition,boolean avoidFriend);
 
 }

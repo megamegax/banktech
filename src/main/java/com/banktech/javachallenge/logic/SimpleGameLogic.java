@@ -32,7 +32,7 @@ public class SimpleGameLogic implements GameLogic {
     }
 
     @Override
-    public synchronized ViewModel step(ViewModel currentViewModel, Long submarineId, Position fallbackPosition) {
+    public synchronized ViewModel step(ViewModel currentViewModel, Long submarineId, Position fallbackPosition,boolean avoidFriend) {
         fillAttributes(currentViewModel);
         this.fallbackPosition = fallbackPosition;
         currentViewModel.getOwnSubmarines().stream().filter(submarine -> submarine.getId().equals(submarineId)).forEach(submarine -> handleSonar(currentViewModel.getWorldMap(), submarine));

@@ -160,6 +160,7 @@ public class GameRunner {
         System.out.println("------Turn: " + (getCurrentRound() + 1) + "------");
       /*  List<ApiCall> calls = getCurrentViewModel().getCalls();
         calls.forEach(System.out::println);*/
+      getCurrentViewModel().getDetectedSubmarines().forEach(System.out::println);
     }
 
     void play() {
@@ -196,12 +197,13 @@ public class GameRunner {
                         fallbackPositions.add(new Position(game.getMapConfiguration().getWidth() - 100, game.getMapConfiguration().getHeight() / 2));
                         fallbackPositions.add(new Position(100, game.getMapConfiguration().getHeight() / 2));
                         int index = 0;
+                        ViewModel model = getCurrentViewModel();
                         for (OwnSubmarine submarine : getCurrentViewModel().getOwnSubmarines()) {
-                            ViewModel model = extendedGameLogic.step(getCurrentViewModel(), submarine.getId(), fallbackPositions.get(index));
-                            turns.set(getLastTurnNumber(), model);
+                            model = extendedGameLogic.step(model, submarine.getId(), fallbackPositions.get(index), index == 0);
                             index++;
-                            refreshGui();
                         }
+                        turns.set(getLastTurnNumber(), model);
+                        refreshGui();
 
 
                     } catch (Exception e) {

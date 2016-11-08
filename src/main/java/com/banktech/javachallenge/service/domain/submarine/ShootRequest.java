@@ -19,5 +19,10 @@ public class ShootRequest {
         this.angle = angle;
     }
 
-
+    @Override
+    public String toString() {
+        return "ShootRequest{" +
+                "angle=" + angle +
+                '}';
+    }
 }
