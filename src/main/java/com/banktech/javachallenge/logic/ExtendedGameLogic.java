@@ -87,8 +87,8 @@ public class ExtendedGameLogic implements GameLogic {
 
     private Position simulatePosition(Entity entity, double roundToHit) {
         Position simulatedPosition = entity.getPosition();
-        for (int i = 0; i < roundToHit; i++) {
-            simulatedPosition.move(entity.getVelocity(), entity.getAngle());
+        for (int i = 0; i <= roundToHit; i++) {
+            simulatedPosition.move(viewModel.getGame().getMapConfiguration().getMaxSpeed().doubleValue(), entity.getAngle());
         }
         return simulatedPosition;
     }
@@ -102,13 +102,14 @@ public class ExtendedGameLogic implements GameLogic {
         boolean friendPresent = viewModel.getOwnSubmarines().stream().filter(e -> !e.getId().equals(ownSubmarine.getId()))
                 .filter(e -> close(projectedLocations, e)).findAny().isPresent();
         return enemyPresent.isPresent()
-                && enemyPresent.get().getPosition().distance(ownSubmarine.getPosition()) > mapConfiguration.getTorpedoExplosionRadius() / 1.5 && !friendPresent;
+                && enemyPresent.get().getPosition().distance(ownSubmarine.getPosition()) > mapConfiguration.getTorpedoExplosionRadius() / 1.5;
     }
 
     private boolean tooCloseEnemy(OwnSubmarine ownSubmarine, List<ProjectedPosition> projectedLocations) {
-        Optional<Entity> enemyPresent = viewModel.getDetectedSubmarines().stream().filter(e -> close(projectedLocations, e)).findAny();
-        return enemyPresent.isPresent()
-                && enemyPresent.get().getPosition().distance(ownSubmarine.getPosition()) < mapConfiguration.getTorpedoExplosionRadius() * 40;
+        Optional<Entity> closest = viewModel.getDetectedSubmarines().stream()
+                .min((a, b) -> Double.compare(a.getPosition().distance(ownSubmarine.getPosition()), b.getPosition().distance(ownSubmarine.getPosition())));
+        return closest.isPresent()
+                && closest.get().getPosition().distance(ownSubmarine.getPosition()) < mapConfiguration.getTorpedoExplosionRadius()*1.5;
     }
 
     private boolean close(List<ProjectedPosition> projectedLocations, Entity e) {

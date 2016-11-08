@@ -110,7 +110,6 @@ public class GameRunner {
 
     private void refreshCallHistory(ApiCall apiCall) {
         getCurrentViewModel().getCalls().add(apiCall);
-        listener.refresh(turns);
     }
 
     private void refreshGui() {
@@ -200,8 +199,8 @@ public class GameRunner {
                         for (OwnSubmarine submarine : getCurrentViewModel().getOwnSubmarines()) {
                             ViewModel model = extendedGameLogic.step(getCurrentViewModel(), submarine.getId(), fallbackPositions.get(index));
                             turns.set(getLastTurnNumber(), model);
-                            refreshGui();
                             index++;
+                            refreshGui();
                         }
 
 
