@@ -4,18 +4,16 @@
 <?import com.jfoenix.controls.JFXSlider?>
 <?import com.jfoenix.controls.JFXToggleButton?>
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ProgressBar?>
+<?import javafx.scene.control.*?>
 <?import javafx.scene.layout.AnchorPane?>
-
 <AnchorPane prefHeight="372.0" prefWidth="198.0" style="-fx-border-color: black;" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.banktech.javachallenge.view.gui.jfx.component.submarine.SubmarineControlPanelController">
    <children>
       <Label layoutX="13.0" layoutY="173.0" text="Sebesség:" />
       <Label fx:id="submarineName" layoutX="7.0" layoutY="6.0" text="Submarine 1" />
       <JFXSlider fx:id="submarineSpeedSlider" layoutX="29.0" layoutY="201.0" prefHeight="14.0" prefWidth="162.0" />
-      <JFXToggleButton fx:id="toggleAutopilot" layoutX="20.0" layoutY="118.0" prefHeight="17.0" prefWidth="173.0" text="Manuális vezérlés" />
+      <JFXToggleButton fx:id="toggleAutopilot" layoutX="20.0" layoutY="118.0" prefHeight="17.0" prefWidth="173.0" text="Manuális vezérlés" visible="false" />
       <Label layoutX="13.0" layoutY="224.0" prefHeight="17.0" prefWidth="53.0" text="Irány:" />
-      <JFXButton fx:id="btnStop" layoutX="84.0" layoutY="333.0" style="-fx-background-color: #ffaaaa;" text="Lövés" />
+      <JFXButton fx:id="btnStop" layoutX="84.0" layoutY="333.0" style="-fx-background-color: #ffaaaa;" text="Lövés" visible="false" />
       <AnchorPane fx:id="wheelContainer" layoutX="102.0" layoutY="278.0" prefHeight="25.0" prefWidth="27.0" />
       <ProgressBar fx:id="hpBar" layoutX="128.0" layoutY="56.0" prefHeight="18.0" prefWidth="83.0" progress="0.0" rotate="-90.0" />
       <ProgressBar fx:id="torpedoCooldownBar" layoutX="-1.0" layoutY="56.0" prefHeight="18.0" prefWidth="83.0" progress="0.0" rotate="-90.0" />
@@ -23,6 +21,8 @@
       <Label layoutX="17.0" layoutY="109.0" text="Torpedo" />
       <Label layoutX="91.0" layoutY="109.0" text="Sonar" />
       <Label layoutX="162.0" layoutY="109.0" text="HP" />
+      <Label fx:id="speed" layoutX="77.0" layoutY="173.0" prefHeight="17.0" prefWidth="87.0" text="0" />
+      <Label fx:id="angle" layoutX="48.0" layoutY="224.0" prefHeight="17.0" prefWidth="87.0" text="0" />
    </children>
    <padding>
       <Insets bottom="10.0" />

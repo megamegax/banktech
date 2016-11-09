@@ -4,7 +4,6 @@ import com.banktech.javachallenge.service.domain.game.Game;
 import com.banktech.javachallenge.service.domain.submarine.OwnSubmarine;
 import com.banktech.javachallenge.service.world.World;
 import com.banktech.javachallenge.view.gui.jfx.component.wheel.Wheel;
-
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -12,11 +11,9 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.Slider;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Pane;
 
 import java.net.URL;
 import java.util.ResourceBundle;
-import java.util.stream.Stream;
 
 public class SubmarineControlPanelController implements Initializable {
     @FXML
@@ -37,6 +34,12 @@ public class SubmarineControlPanelController implements Initializable {
 
     @FXML
     ProgressBar sonarCooldownBar;
+
+    @FXML
+    Label speed;
+
+    @FXML
+    Label angle;
 
     double originalHp = 100;
 
@@ -77,7 +80,9 @@ public class SubmarineControlPanelController implements Initializable {
         this.submarine = submarine;
         Platform.runLater(() -> {
             wheel.setDirection(submarine.getAngle());
-            submarineSpeedSlider.adjustValue((submarine.getVelocity()/game.getMapConfiguration().getMaxSpeed())*100);
+            submarineSpeedSlider.adjustValue((submarine.getVelocity() / game.getMapConfiguration().getMaxSpeed()) * 100);
+            speed.setText(String.valueOf(submarine.getVelocity()));
+            angle.setText(String.valueOf(Math.round(submarine.getAngle())));
             calculateTorpedoCooldown();
             calculateExtendedSonarCooldown();
             calculateHp();
